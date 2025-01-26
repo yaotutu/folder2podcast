@@ -1,3 +1,5 @@
+[![SVG Banners](https://svg-banners.vercel.app/api?type=rainbow&text1=Folder2Podcast📻&width=800&height=400)](https://github.com/Akshay090/svg-banners)
+
 # 🎙️ Folder2Cast
 
 > 把普通文件夹变成播客源的魔法工具！
@@ -99,13 +101,19 @@ http://localhost:3000/audio/my-awesome-podcast/feed.xml
 
 ### 智能文件名处理
 
-支持多种命名风格，自动提取剧集号：
+支持多种命名风格，自动提取剧集号（优先匹配数字开头格式）：
 
 ```bash
+# 优先格式：数字在前
 01.mp3         → 第1集
 01-简介.mp3    → 第1集：简介
 01_开场.mp3    → 第1集：开场
 第01期.mp3     → 第1集
+
+# 次要格式：数字在末尾（紧邻扩展名）
+简介01.mp3     → 第1集：简介
+开场-01.mp3    → 第1集：开场
+第一章001.mp3  → 第1集：第一章
 ```
 
 ### 批量重命名技巧
