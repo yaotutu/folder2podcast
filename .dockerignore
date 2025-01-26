@@ -1,0 +1,22 @@
+# 版本控制
+.git
+.gitignore
+
+# 开发文件
+node_modules
+npm-debug.log
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md
+
+# 构建输出
+dist
+
+# 音频文件目录（将通过volume挂载）
+audio/
+
+# 其他
+.DS_Store
+.env
+*.log

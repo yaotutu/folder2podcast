@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  folder2podcast:
+    build: .
+    container_name: folder2podcast
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./audio:/podcasts:ro  # 以只读方式挂载音频文件夹
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - AUDIO_DIR=/podcasts
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/podcasts"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
