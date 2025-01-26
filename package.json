@@ -1,0 +1,40 @@
+{
+    "name": "folder2podcast",
+    "version": "1.0.0",
+    "description": "Convert audio folders to podcast feeds with HTTP server",
+    "main": "dist/index.js",
+    "bin": {
+        "folder2podcast": "dist/index.js"
+    },
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "npm run clean && tsc && chmod +x dist/index.js",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts audio 4000",
+        "watch": "tsc -w",
+        "test": "echo \"No tests specified\" && exit 0"
+    },
+    "keywords": [
+        "podcast",
+        "rss",
+        "audio",
+        "server"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@fastify/static": "^6.12.0",
+        "fastify": "^4.25.2",
+        "feed": "^4.2.2",
+        "fs-extra": "^11.2.0",
+        "path": "^0.12.7",
+        "pinyin": "^3.0.0-alpha.5"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "@types/node": "^20.11.5",
+        "rimraf": "^5.0.5",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3"
+    }
+}
