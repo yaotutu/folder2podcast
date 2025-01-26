@@ -43,6 +43,7 @@ const path_1 = __importDefault(require("path"));
 const pinyin_1 = __importDefault(require("pinyin"));
 const scanner_1 = require("./utils/scanner");
 const feed_1 = require("./utils/feed");
+const DEFAULT_COVER = 'https://cdn.pixabay.com/photo/2019/07/04/06/26/podcast-4315494_1280.jpg';
 class PodcastServer {
     constructor(audioDir, port) {
         this.sources = new Map();
@@ -54,10 +55,17 @@ class PodcastServer {
         });
     }
     toPinyin(str) {
-        return (0, pinyin_1.default)(str, {
+        // 将特殊字符替换为空格，然后转换为拼音
+        const cleaned = str.replace(/[^\w\u4e00-\u9fff]/g, ' ');
+        return (0, pinyin_1.default)(cleaned, {
             style: pinyin_1.default.STYLE_NORMAL,
             heteronym: false
-        }).flat().join('-');
+        })
+            .flat()
+            .join('-')
+            .replace(/\s+/g, '-') // 将连续的空格替换为单个连字符
+            .replace(/-+/g, '-') // 将连续的连字符替换为单个连字符
+            .toLowerCase();
     }
     formatDate(date) {
         return date.toLocaleDateString('zh-CN', {
@@ -66,19 +74,23 @@ class PodcastServer {
             day: '2-digit'
         });
     }
+    getFeedUrl(dirName) {
+        const encodedName = encodeURIComponent(dirName);
+        return `${this.baseUrl}/audio/${encodedName}/feed.xml`;
+    }
     formatPodcastInfo(source) {
-        const episodes = source.episodes
-            .map(ep => `    - [${this.formatDate(ep.pubDate)}] ${ep.fileName}`)
-            .join('\n');
+        const episodeCount = source.episodes.length;
+        const coverInfo = source.coverPath ? '✓' : '✗';
         return `
   ${source.config.title}
   ├── 描述: ${source.config.description}
   ├── 作者: ${source.config.author}
   ├── 语言: ${source.config.language}
-  ├── RSS: ${this.baseUrl}/audio/${source.dirName}/feed.xml
-  ├── 剧集数: ${source.episodes.length}
-  └── 剧集列表:
-${episodes}`;
+  ├── 封面: ${coverInfo}
+  ├── 剧集数: ${episodeCount}
+  ├── 文件夹名: ${source.dirName}
+  ├── 拼音路径: ${this.toPinyin(source.dirName)}
+  └── RSS地址: ${this.getFeedUrl(source.dirName)}`;
     }
     displayPodcastList() {
         if (this.sources.size === 0) {
@@ -93,7 +105,7 @@ ${episodes}`;
         }
         console.log(`\n总共发现 ${this.sources.size} 个播客源`);
         console.log(`服务器地址: ${this.baseUrl}`);
-        console.log('播客列表API: /podcasts');
+        console.log('播客列表API: /podcasts\n');
     }
     async initialize() {
         // 注册静态文件服务中间件
@@ -104,17 +116,19 @@ ${episodes}`;
         });
         // 处理所有播客源
         const options = {
-            baseUrl: this.baseUrl
+            baseUrl: this.baseUrl,
+            defaultCover: DEFAULT_COVER
         };
         // API路由: 获取所有播客列表
         this.server.get('/podcasts', async () => {
             const podcasts = Array.from(this.sources.values()).map(source => ({
                 title: source.config.title,
                 description: source.config.description,
+                dirName: source.dirName,
                 slug: this.toPinyin(source.dirName),
                 coverUrl: source.coverPath
                     ? `/audio/${source.dirName}/cover.jpg`
-                    : undefined,
+                    : DEFAULT_COVER,
                 feedUrl: `/audio/${source.dirName}/feed.xml`,
                 episodeCount: source.episodes.length,
                 latestEpisodeDate: source.episodes.length > 0
@@ -130,9 +144,7 @@ ${episodes}`;
                 const source = await (0, scanner_1.processPodcastSource)(path_1.default.join(this.audioDir, dir));
                 this.sources.set(dir, source);
                 // 生成并保存feed文件
-                const feed = await (0, feed_1.generateFeed)(source, {
-                    baseUrl: `${this.baseUrl}/audio/${dir}`
-                });
+                const feed = await (0, feed_1.generateFeed)(source, options);
                 const feedPath = path_1.default.join(this.audioDir, dir, 'feed.xml');
                 await this.saveFeed(feedPath, feed);
                 this.server.log.info(`Processed podcast source: ${dir}`);

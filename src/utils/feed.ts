@@ -15,11 +15,12 @@ async function getFileSize(filePath: string): Promise<number> {
 
 export async function generateFeed(source: PodcastSource, options: ProcessOptions): Promise<string> {
     const { config, episodes, coverPath } = source;
-    const { baseUrl } = options;
+    const { baseUrl, defaultCover } = options;
 
+    // 使用封面图片或默认封面
     const feedImage = coverPath
         ? `${baseUrl}/${path.basename(source.dirPath)}/cover.jpg`
-        : undefined;
+        : defaultCover;
 
     // 获取最新一集的日期作为Feed更新时间
     const latestEpisode = episodes[episodes.length - 1];
@@ -65,15 +66,11 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
             'itunes:name': config.author,
             'itunes:email': config.email
         },
-        'itunes:summary': config.description
-    };
-
-    // 只有在有封面图片时添加图片标签
-    if (feedImage) {
-        itunesExtension['itunes:image'] = {
+        'itunes:summary': config.description,
+        'itunes:image': {
             _attr: { href: feedImage }
-        };
-    }
+        }
+    };
 
     feed.addExtension({
         name: '_iTunes',
@@ -91,7 +88,7 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
             link: episodeUrl,
             description: episode.title,
             content: episode.title,
-            date: episode.pubDate, // 使用生成的发布日期
+            date: episode.pubDate,
             author: [
                 {
                     name: config.author,
@@ -111,7 +108,7 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
                         'itunes:author': config.author,
                         'itunes:subtitle': episode.title,
                         'itunes:summary': episode.title,
-                        'itunes:duration': '00:00:00', // 这里可以添加实际音频时长
+                        'itunes:duration': '00:00:00',
                         'itunes:explicit': config.explicit ? 'yes' : 'no',
                         'itunes:episodeType': 'full'
                     }

@@ -3,7 +3,7 @@ export interface Episode {
     title: string;
     fileName: string;
     filePath: string;
-    pubDate: Date;  // 添加发布日期字段
+    pubDate: Date;
 }
 
 export interface PodcastConfig {
@@ -27,4 +27,5 @@ export interface PodcastSource {
 
 export interface ProcessOptions {
     baseUrl: string;
+    defaultCover: string;  // 添加默认封面URL选项
 }
