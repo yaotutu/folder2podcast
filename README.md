@@ -2,32 +2,49 @@
 
 将音频文件夹转换为播客源，方便通过播客客户端进行收听和进度管理。只需将音频文件放入指定文件夹，即可自动生成播客RSS源。
 
-## 最简单的使用方法
+## 快速开始
 
-1. 创建音频文件夹：
+### 使用 Docker Hub 镜像（最简单）
+
 ```bash
+# 1. 创建音频文件夹
 mkdir -p audio/我的播客
-# 将MP3文件复制到这个文件夹
-cp *.mp3 audio/我的播客/
-```
 
-2. 启动服务：
-```bash
+# 2. 创建docker-compose.yml
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  folder2podcast:
+    image: user/folder2podcast:latest    # 替换为实际的Docker Hub仓库
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./audio:/podcasts:ro
+    restart: unless-stopped
+EOF
+
+# 3. 启动服务
 docker-compose up -d
 ```
 
-3. 访问播客列表：
-```
-http://localhost:3000/podcasts
+### 本地构建运行
+
+1. 克隆项目：
+```bash
+git clone [项目地址]
+cd folder2podcast
 ```
 
-就是这么简单！现在你可以在任何播客客户端中添加生成的RSS地址了。
+2. 构建和启动：
+```bash
+docker-compose up -d --build
+```
 
-## 文件夹组织方式
+## 目录结构说明
 
 ### 基础结构
 ```
-audio/                    # 根目录（可以在docker-compose.yml中修改）
+audio/                    # 音频文件根目录
 ├── 播客节目一/           # 第一个播客的文件夹
 │   ├── 01.第一集.mp3    # 音频文件（必须以数字开头）
 │   ├── 02.第二集.mp3    
@@ -101,69 +118,69 @@ http://localhost:3000/audio/播客节目一/feed.xml
 http://localhost:3000/audio/my-podcast/feed.xml
 ```
 
-建议：
-- 在podcast.json中配置alias，使用别名地址
-- 别名只能包含小写字母、数字和连字符
-- 使用别名地址可以确保最佳兼容性
+## Docker部署选项
 
-## 部署说明
+### 环境变量配置
 
-### 使用Docker（推荐）
-
-1. 下载配置文件：
-```bash
-wget https://raw.githubusercontent.com/username/folder2podcast/main/docker-compose.yml
+```yaml
+services:
+  folder2podcast:
+    environment:
+      - PORT=3000             # 服务端口
+      - NODE_ENV=production   # 运行模式
 ```
 
-2. 创建音频文件夹：
-```bash
-mkdir -p audio/我的播客
-```
+### 端口映射
 
-3. 复制音频文件：
-```bash
-cp *.mp3 audio/我的播客/
-```
-
-4. 启动服务：
-```bash
-docker-compose up -d
-```
-
-### 查看运行状态
-
-1. 检查服务状态：
-```bash
-docker-compose ps
-```
-
-2. 查看日志：
-```bash
-docker-compose logs -f
-```
-
-3. 访问播客列表以验证：
-```
-http://localhost:3000/podcasts
-```
-
-### 修改配置
-
-1. 更改端口（默认3000）：
-编辑 docker-compose.yml：
 ```yaml
 services:
   folder2podcast:
     ports:
-      - "8080:3000"  # 改为8080端口
+      - "8080:3000"  # 修改外部访问端口为8080
 ```
 
-2. 更改音频目录位置：
+### 音频目录挂载
+
 ```yaml
 services:
   folder2podcast:
     volumes:
-      - /path/to/my/audiobooks:/podcasts:ro  # 改为你的音频目录
+      - /path/to/my/audiobooks:/podcasts:ro  # 修改音频目录位置
+```
+
+## 开发相关
+
+### 构建 Docker 镜像
+
+项目使用 GitHub Actions 自动构建和发布 Docker 镜像：
+
+- 推送到main分支时自动构建
+- 创建版本标签（如v1.0.0）时自动发布版本镜像
+- 支持多架构：linux/amd64, linux/arm64
+
+### 配置自动构建
+
+1. 在 GitHub 仓库设置中添加 secrets：
+   - `DOCKERHUB_USERNAME`: Docker Hub 用户名
+   - `DOCKERHUB_TOKEN`: Docker Hub 访问令牌
+
+2. 修改 `.github/workflows/docker-publish.yml` 中的环境变量：
+```yaml
+env:
+  IMAGE_NAME: your-username/folder2podcast  # 改为你的Docker Hub仓库
+```
+
+### 手动构建推送
+
+```bash
+# 登录到 Docker Hub
+docker login
+
+# 构建镜像
+docker build -t username/folder2podcast:latest .
+
+# 推送镜像
+docker push username/folder2podcast:latest
 ```
 
 ## 播客客户端订阅步骤
@@ -193,9 +210,14 @@ services:
      ls -1 *.mp3 | cat -n | while read n f; do mv "$f" "$(printf '%02d.%s' $n "${f#*.}")"; done
      ```
 
-4. 如何更新播客内容？
-   - 直接在音频文件夹中添加/删除文件
-   - 无需重启服务，系统会自动检测
+4. 如何更新到最新版本？
+```bash
+# 拉取最新镜像
+docker-compose pull
+
+# 重新启动服务
+docker-compose up -d
+```
 
 ## 安全性说明
 
