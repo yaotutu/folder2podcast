@@ -19,12 +19,8 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
 
     // 使用封面图片或默认封面
     const feedImage = coverPath
-        ? `${baseUrl}/${path.basename(source.dirPath)}/cover.jpg`
+        ? `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
         : defaultCover;
-
-    // 获取最新一集的日期作为Feed更新时间
-    const latestEpisode = episodes[episodes.length - 1];
-    const updateDate = latestEpisode ? latestEpisode.pubDate : new Date();
 
     // 创建Feed实例
     const feed = new Feed({
@@ -36,10 +32,10 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
         image: feedImage,
         favicon: feedImage,
         copyright: `All rights reserved ${new Date().getFullYear()}, ${config.author}`,
-        updated: updateDate,
+        updated: new Date(),
         generator: 'Folder2Cast',
         feedLinks: {
-            rss: `${baseUrl}/${path.basename(source.dirPath)}/feed.xml`
+            rss: `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`
         },
         author: {
             name: config.author,
@@ -79,7 +75,7 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
 
     // 添加每个剧集
     for (const episode of episodes) {
-        const episodeUrl = `${baseUrl}/${path.basename(source.dirPath)}/${episode.fileName}`;
+        const episodeUrl = `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/${encodeURIComponent(episode.fileName)}`;
         const fileSize = await getFileSize(episode.filePath);
 
         feed.addItem({

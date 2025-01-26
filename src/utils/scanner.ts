@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { Episode, PodcastSource, PodcastConfig } from '../types';
-import { readConfig, DEFAULT_CONFIG, validateConfig } from './config';
+import { readConfig, getConfigWithDefaults, validateConfig } from './config';
 import { createEpisode, sortEpisodes, validateFileName } from './episode';
 
 export async function validatePodcastDirectory(dirPath: string): Promise<void> {
@@ -36,36 +36,25 @@ export async function processPodcastSource(dirPath: string): Promise<PodcastSour
     await validatePodcastDirectory(dirPath);
 
     // 读取配置和扫描音频文件
-    const [config, episodes] = await Promise.all([
+    const [rawConfig, episodes] = await Promise.all([
         readConfig(dirPath),
         scanAudioFiles(dirPath)
     ]);
 
     // 验证配置
-    validateConfig(config);
+    validateConfig(rawConfig);
 
-    // 使用文件夹名作为默认标题和描述
-    const dirName = path.basename(dirPath);
-    const defaultConfig = {
-        ...DEFAULT_CONFIG,
-        title: dirName,
-        description: dirName
-    };
-
-    // 合并默认配置和用户配置
-    const finalConfig: Required<PodcastConfig> = {
-        ...defaultConfig,
-        ...config
-    };
+    // 获取完整配置（包含默认值和生成的别名）
+    const config = getConfigWithDefaults(dirPath, rawConfig);
 
     // 检查cover.jpg是否存在，但不强制要求
     const coverPath = path.join(dirPath, 'cover.jpg');
     const hasCover = await fs.pathExists(coverPath);
 
     return {
-        dirName,
+        dirName: path.basename(dirPath),
         dirPath,
-        config: finalConfig,
+        config,
         episodes,
         coverPath: hasCover ? coverPath : undefined
     };

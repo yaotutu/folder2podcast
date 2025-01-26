@@ -15,6 +15,7 @@ export interface PodcastConfig {
     explicit?: boolean;
     email?: string;
     websiteUrl?: string;
+    alias?: string;  // 添加别名配置，用于URL访问
 }
 
 export interface PodcastSource {
@@ -27,5 +28,5 @@ export interface PodcastSource {
 
 export interface ProcessOptions {
     baseUrl: string;
-    defaultCover: string;  // 添加默认封面URL选项
+    defaultCover: string;
 }

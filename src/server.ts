@@ -1,7 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
-import pinyin from 'pinyin';
 import { ProcessOptions, PodcastSource } from './types';
 import { processPodcastSource } from './utils/scanner';
 import { generateFeed } from './utils/feed';
@@ -12,6 +11,7 @@ export class PodcastServer {
     private server: FastifyInstance;
     private audioDir: string;
     private sources: Map<string, PodcastSource> = new Map();
+    private aliasMap: Map<string, PodcastSource> = new Map(); // 存储别名到播客源的映射
     private baseUrl: string;
     private port: number;
 
@@ -24,20 +24,6 @@ export class PodcastServer {
         });
     }
 
-    private toPinyin(str: string): string {
-        // 将特殊字符替换为空格，然后转换为拼音
-        const cleaned = str.replace(/[^\w\u4e00-\u9fff]/g, ' ');
-        return pinyin(cleaned, {
-            style: pinyin.STYLE_NORMAL,
-            heteronym: false
-        })
-            .flat()
-            .join('-')
-            .replace(/\s+/g, '-') // 将连续的空格替换为单个连字符
-            .replace(/-+/g, '-')  // 将连续的连字符替换为单个连字符
-            .toLowerCase();
-    }
-
     private formatDate(date: Date): string {
         return date.toLocaleDateString('zh-CN', {
             year: 'numeric',
@@ -46,14 +32,10 @@ export class PodcastServer {
         });
     }
 
-    private getFeedUrl(dirName: string): string {
-        const encodedName = encodeURIComponent(dirName);
-        return `${this.baseUrl}/audio/${encodedName}/feed.xml`;
-    }
-
     private formatPodcastInfo(source: PodcastSource): string {
         const episodeCount = source.episodes.length;
         const coverInfo = source.coverPath ? '✓' : '✗';
+
         return `
   ${source.config.title}
   ├── 描述: ${source.config.description}
@@ -62,8 +44,9 @@ export class PodcastServer {
   ├── 封面: ${coverInfo}
   ├── 剧集数: ${episodeCount}
   ├── 文件夹名: ${source.dirName}
-  ├── 拼音路径: ${this.toPinyin(source.dirName)}
-  └── RSS地址: ${this.getFeedUrl(source.dirName)}`;
+  ├── 别名: ${source.config.alias || '无'}
+  ├── RSS地址1: ${this.baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml
+  └── RSS地址2: ${source.config.alias ? this.baseUrl + '/audio/' + source.config.alias + '/feed.xml' : '无'}`;
     }
 
     private displayPodcastList(): void {
@@ -85,41 +68,66 @@ export class PodcastServer {
         console.log('播客列表API: /podcasts\n');
     }
 
-    public async initialize(): Promise<void> {
-        // 注册静态文件服务中间件
+    private async setupRoutes(): Promise<void> {
+        // 设置别名路由 - 必须在静态文件服务之前
+        for (const [alias, source] of this.aliasMap.entries()) {
+            const feedPath = `/audio/${alias}/feed.xml`;
+            this.server.get(feedPath, async (request, reply) => {
+                const feed = await generateFeed(source, {
+                    baseUrl: this.baseUrl,
+                    defaultCover: DEFAULT_COVER
+                });
+                reply.type('application/xml').send(feed);
+            });
+        }
+
+        // 为原始路径设置feed路由
+        for (const source of this.sources.values()) {
+            const feedPath = `/audio/${encodeURIComponent(source.dirName)}/feed.xml`;
+            this.server.get(feedPath, async (request, reply) => {
+                const feed = await generateFeed(source, {
+                    baseUrl: this.baseUrl,
+                    defaultCover: DEFAULT_COVER
+                });
+                reply.type('application/xml').send(feed);
+            });
+        }
+
+        // API路由: 获取所有播客列表
+        this.server.get('/podcasts', async () => {
+            const podcasts = Array.from(this.sources.values()).map(source => {
+                return {
+                    title: source.config.title,
+                    description: source.config.description,
+                    dirName: source.dirName,
+                    alias: source.config.alias,
+                    coverUrl: source.coverPath
+                        ? `/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
+                        : DEFAULT_COVER,
+                    feedUrl: {
+                        original: `/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
+                        alias: source.config.alias ? `/audio/${source.config.alias}/feed.xml` : null
+                    },
+                    episodeCount: source.episodes.length,
+                    latestEpisodeDate: source.episodes.length > 0
+                        ? source.episodes[source.episodes.length - 1].pubDate
+                        : null
+                };
+            });
+            return { podcasts };
+        });
+
+        // 注册静态文件服务中间件 - 处理音频文件访问
         await this.server.register(fastifyStatic, {
             root: this.audioDir,
             prefix: '/audio/',
             decorateReply: false
         });
+    }
 
-        // 处理所有播客源
-        const options: ProcessOptions = {
-            baseUrl: this.baseUrl,
-            defaultCover: DEFAULT_COVER
-        };
-
-        // API路由: 获取所有播客列表
-        this.server.get('/podcasts', async () => {
-            const podcasts = Array.from(this.sources.values()).map(source => ({
-                title: source.config.title,
-                description: source.config.description,
-                dirName: source.dirName,
-                slug: this.toPinyin(source.dirName),
-                coverUrl: source.coverPath
-                    ? `/audio/${source.dirName}/cover.jpg`
-                    : DEFAULT_COVER,
-                feedUrl: `/audio/${source.dirName}/feed.xml`,
-                episodeCount: source.episodes.length,
-                latestEpisodeDate: source.episodes.length > 0
-                    ? source.episodes[source.episodes.length - 1].pubDate
-                    : null
-            }));
-            return { podcasts };
-        });
-
-        // 初始化时扫描并处理所有播客源
+    public async initialize(): Promise<void> {
         try {
+            // 扫描并处理所有播客源
             const dirs = await this.scanPodcastDirs();
             for (const dir of dirs) {
                 const source = await processPodcastSource(
@@ -127,13 +135,20 @@ export class PodcastServer {
                 );
                 this.sources.set(dir, source);
 
-                // 生成并保存feed文件
-                const feed = await generateFeed(source, options);
-                const feedPath = path.join(this.audioDir, dir, 'feed.xml');
-                await this.saveFeed(feedPath, feed);
+                // 创建别名映射
+                const alias = source.config.alias;
+                if (alias) {
+                    if (this.aliasMap.has(alias)) {
+                        throw new Error(`Duplicate alias "${alias}" found. Aliases must be unique.`);
+                    }
+                    this.aliasMap.set(alias, source);
+                }
 
-                this.server.log.info(`Processed podcast source: ${dir}`);
+                this.server.log.info(`Processed podcast source: ${dir} (alias: ${alias || 'none'})`);
             }
+
+            // 设置所有路由
+            await this.setupRoutes();
 
             // 显示发现的播客列表
             this.displayPodcastList();
@@ -162,11 +177,6 @@ export class PodcastServer {
         }
 
         return dirs;
-    }
-
-    private async saveFeed(feedPath: string, feed: string): Promise<void> {
-        const { writeFile } = await import('fs/promises');
-        await writeFile(feedPath, feed, 'utf-8');
     }
 
     public async start(): Promise<void> {

@@ -37,31 +37,21 @@ async function processPodcastSource(dirPath) {
     // 验证目录结构
     await validatePodcastDirectory(dirPath);
     // 读取配置和扫描音频文件
-    const [config, episodes] = await Promise.all([
+    const [rawConfig, episodes] = await Promise.all([
         (0, config_1.readConfig)(dirPath),
         scanAudioFiles(dirPath)
     ]);
     // 验证配置
-    (0, config_1.validateConfig)(config);
-    // 使用文件夹名作为默认标题和描述
-    const dirName = path_1.default.basename(dirPath);
-    const defaultConfig = {
-        ...config_1.DEFAULT_CONFIG,
-        title: dirName,
-        description: dirName
-    };
-    // 合并默认配置和用户配置
-    const finalConfig = {
-        ...defaultConfig,
-        ...config
-    };
+    (0, config_1.validateConfig)(rawConfig);
+    // 获取完整配置（包含默认值和生成的别名）
+    const config = (0, config_1.getConfigWithDefaults)(dirPath, rawConfig);
     // 检查cover.jpg是否存在，但不强制要求
     const coverPath = path_1.default.join(dirPath, 'cover.jpg');
     const hasCover = await fs_extra_1.default.pathExists(coverPath);
     return {
-        dirName,
+        dirName: path_1.default.basename(dirPath),
         dirPath,
-        config: finalConfig,
+        config,
         episodes,
         coverPath: hasCover ? coverPath : undefined
     };
