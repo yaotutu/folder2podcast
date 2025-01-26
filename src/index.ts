@@ -7,6 +7,14 @@ async function main() {
         const [, , audioDir = 'audio', portStr = '3000'] = process.argv;
         const port = parseInt(portStr, 10);
 
+        // 调试日志
+        console.log('命令行参数：', {
+            raw: process.argv,
+            audioDir,
+            portStr,
+            port
+        });
+
         if (isNaN(port)) {
             console.error('错误: 端口号必须是有效的数字');
             console.error('用法: folder2podcast [音频目录] [端口号]');
