@@ -47,6 +47,7 @@ class PodcastServer {
     constructor(audioDir, port) {
         this.sources = new Map();
         this.audioDir = path_1.default.resolve(audioDir);
+        this.port = port;
         this.baseUrl = `http://localhost:${port}`;
         this.server = (0, fastify_1.default)({
             logger: true
@@ -58,15 +59,25 @@ class PodcastServer {
             heteronym: false
         }).flat().join('-');
     }
+    formatDate(date) {
+        return date.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    }
     formatPodcastInfo(source) {
-        const episodes = source.episodes.map(ep => `    - ${ep.fileName}`).join('\n');
+        const episodes = source.episodes
+            .map(ep => `    - [${this.formatDate(ep.pubDate)}] ${ep.fileName}`)
+            .join('\n');
         return `
   ${source.config.title}
   ├── 描述: ${source.config.description}
   ├── 作者: ${source.config.author}
   ├── 语言: ${source.config.language}
   ├── RSS: ${this.baseUrl}/audio/${source.dirName}/feed.xml
-  └── 剧集数: ${source.episodes.length}
+  ├── 剧集数: ${source.episodes.length}
+  └── 剧集列表:
 ${episodes}`;
     }
     displayPodcastList() {
@@ -105,7 +116,10 @@ ${episodes}`;
                     ? `/audio/${source.dirName}/cover.jpg`
                     : undefined,
                 feedUrl: `/audio/${source.dirName}/feed.xml`,
-                episodeCount: source.episodes.length
+                episodeCount: source.episodes.length,
+                latestEpisodeDate: source.episodes.length > 0
+                    ? source.episodes[source.episodes.length - 1].pubDate
+                    : null
             }));
             return { podcasts };
         });
@@ -116,7 +130,7 @@ ${episodes}`;
                 const source = await (0, scanner_1.processPodcastSource)(path_1.default.join(this.audioDir, dir));
                 this.sources.set(dir, source);
                 // 生成并保存feed文件
-                const feed = (0, feed_1.generateFeed)(source, {
+                const feed = await (0, feed_1.generateFeed)(source, {
                     baseUrl: `${this.baseUrl}/audio/${dir}`
                 });
                 const feedPath = path_1.default.join(this.audioDir, dir, 'feed.xml');
@@ -156,7 +170,10 @@ ${episodes}`;
     }
     async start() {
         try {
-            const address = await this.server.listen({ port: 3000, host: '0.0.0.0' });
+            const address = await this.server.listen({
+                port: this.port,
+                host: '0.0.0.0'
+            });
             this.server.log.info(`Server listening at ${address}`);
         }
         catch (err) {

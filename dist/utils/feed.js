@@ -6,12 +6,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateFeed = generateFeed;
 const feed_1 = require("feed");
 const path_1 = __importDefault(require("path"));
-function generateFeed(source, options) {
+const fs_extra_1 = __importDefault(require("fs-extra"));
+async function getFileSize(filePath) {
+    try {
+        const stats = await fs_extra_1.default.stat(filePath);
+        return stats.size;
+    }
+    catch (error) {
+        console.warn(`Failed to get file size for ${filePath}:`, error);
+        return 0;
+    }
+}
+async function generateFeed(source, options) {
     const { config, episodes, coverPath } = source;
     const { baseUrl } = options;
     const feedImage = coverPath
         ? `${baseUrl}/${path_1.default.basename(source.dirPath)}/cover.jpg`
         : undefined;
+    // 获取最新一集的日期作为Feed更新时间
+    const latestEpisode = episodes[episodes.length - 1];
+    const updateDate = latestEpisode ? latestEpisode.pubDate : new Date();
     // 创建Feed实例
     const feed = new feed_1.Feed({
         title: config.title,
@@ -22,7 +36,7 @@ function generateFeed(source, options) {
         image: feedImage,
         favicon: feedImage,
         copyright: `All rights reserved ${new Date().getFullYear()}, ${config.author}`,
-        updated: new Date(),
+        updated: updateDate,
         generator: 'Folder2Cast',
         feedLinks: {
             rss: `${baseUrl}/${path_1.default.basename(source.dirPath)}/feed.xml`
@@ -65,12 +79,14 @@ function generateFeed(source, options) {
     // 添加每个剧集
     for (const episode of episodes) {
         const episodeUrl = `${baseUrl}/${path_1.default.basename(source.dirPath)}/${episode.fileName}`;
+        const fileSize = await getFileSize(episode.filePath);
         feed.addItem({
             title: episode.title,
             id: episodeUrl,
             link: episodeUrl,
             description: episode.title,
             content: episode.title,
+            date: episode.pubDate, // 使用生成的发布日期
             author: [
                 {
                     name: config.author,
@@ -78,11 +94,10 @@ function generateFeed(source, options) {
                     link: config.websiteUrl || baseUrl
                 }
             ],
-            date: new Date(), // 这里可以添加文件的修改时间
             enclosure: {
                 url: episodeUrl,
                 type: getMediaType(episode.fileName),
-                length: 0 // 这里可以添加实际文件大小
+                length: fileSize
             },
             extensions: [
                 {

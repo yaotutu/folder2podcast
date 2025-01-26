@@ -1,6 +1,8 @@
 import path from 'path';
 import { Episode } from '../types';
 
+const BASE_DATE = new Date('2024-12-18T00:00:00.000Z');
+
 export function parseEpisodeNumber(fileName: string): number {
     const match = fileName.match(/^(\d+)/);
     if (!match) {
@@ -16,15 +18,24 @@ export function parseEpisodeTitle(fileName: string): string {
     return withoutNumber.replace(/\.[^/.]+$/, '');
 }
 
+export function generatePubDate(episodeNumber: number): Date {
+    // 根据剧集编号增加天数
+    const pubDate = new Date(BASE_DATE);
+    pubDate.setDate(BASE_DATE.getDate() + episodeNumber - 1); // -1是因为第一集应该是基准日期
+    return pubDate;
+}
+
 export function createEpisode(fileName: string, dirPath: string): Episode {
     const number = parseEpisodeNumber(fileName);
     const title = parseEpisodeTitle(fileName);
+    const pubDate = generatePubDate(number);
 
     return {
         number,
         title,
         fileName,
-        filePath: path.join(dirPath, fileName)
+        filePath: path.join(dirPath, fileName),
+        pubDate
     };
 }
 

@@ -11,9 +11,11 @@ export class PodcastServer {
     private audioDir: string;
     private sources: Map<string, PodcastSource> = new Map();
     private baseUrl: string;
+    private port: number;
 
     constructor(audioDir: string, port: number) {
         this.audioDir = path.resolve(audioDir);
+        this.port = port;
         this.baseUrl = `http://localhost:${port}`;
         this.server = fastify({
             logger: true
@@ -27,15 +29,26 @@ export class PodcastServer {
         }).flat().join('-');
     }
 
+    private formatDate(date: Date): string {
+        return date.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    }
+
     private formatPodcastInfo(source: PodcastSource): string {
-        const episodes = source.episodes.map(ep => `    - ${ep.fileName}`).join('\n');
+        const episodes = source.episodes
+            .map(ep => `    - [${this.formatDate(ep.pubDate)}] ${ep.fileName}`)
+            .join('\n');
         return `
   ${source.config.title}
   ├── 描述: ${source.config.description}
   ├── 作者: ${source.config.author}
   ├── 语言: ${source.config.language}
   ├── RSS: ${this.baseUrl}/audio/${source.dirName}/feed.xml
-  └── 剧集数: ${source.episodes.length}
+  ├── 剧集数: ${source.episodes.length}
+  └── 剧集列表:
 ${episodes}`;
     }
 
@@ -81,7 +94,10 @@ ${episodes}`;
                     ? `/audio/${source.dirName}/cover.jpg`
                     : undefined,
                 feedUrl: `/audio/${source.dirName}/feed.xml`,
-                episodeCount: source.episodes.length
+                episodeCount: source.episodes.length,
+                latestEpisodeDate: source.episodes.length > 0
+                    ? source.episodes[source.episodes.length - 1].pubDate
+                    : null
             }));
             return { podcasts };
         });
@@ -96,7 +112,7 @@ ${episodes}`;
                 this.sources.set(dir, source);
 
                 // 生成并保存feed文件
-                const feed = generateFeed(source, {
+                const feed = await generateFeed(source, {
                     baseUrl: `${this.baseUrl}/audio/${dir}`
                 });
                 const feedPath = path.join(this.audioDir, dir, 'feed.xml');
@@ -141,7 +157,10 @@ ${episodes}`;
 
     public async start(): Promise<void> {
         try {
-            const address = await this.server.listen({ port: 3000, host: '0.0.0.0' });
+            const address = await this.server.listen({
+                port: this.port,
+                host: '0.0.0.0'
+            });
             this.server.log.info(`Server listening at ${address}`);
         } catch (err) {
             this.server.log.error(err);

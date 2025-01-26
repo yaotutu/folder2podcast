@@ -5,10 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseEpisodeNumber = parseEpisodeNumber;
 exports.parseEpisodeTitle = parseEpisodeTitle;
+exports.generatePubDate = generatePubDate;
 exports.createEpisode = createEpisode;
 exports.sortEpisodes = sortEpisodes;
 exports.validateFileName = validateFileName;
 const path_1 = __importDefault(require("path"));
+const BASE_DATE = new Date('2024-12-18T00:00:00.000Z');
 function parseEpisodeNumber(fileName) {
     const match = fileName.match(/^(\d+)/);
     if (!match) {
@@ -22,14 +24,22 @@ function parseEpisodeTitle(fileName) {
     // 移除文件扩展名
     return withoutNumber.replace(/\.[^/.]+$/, '');
 }
+function generatePubDate(episodeNumber) {
+    // 根据剧集编号增加天数
+    const pubDate = new Date(BASE_DATE);
+    pubDate.setDate(BASE_DATE.getDate() + episodeNumber - 1); // -1是因为第一集应该是基准日期
+    return pubDate;
+}
 function createEpisode(fileName, dirPath) {
     const number = parseEpisodeNumber(fileName);
     const title = parseEpisodeTitle(fileName);
+    const pubDate = generatePubDate(number);
     return {
         number,
         title,
         fileName,
-        filePath: path_1.default.join(dirPath, fileName)
+        filePath: path_1.default.join(dirPath, fileName),
+        pubDate
     };
 }
 function sortEpisodes(episodes) {

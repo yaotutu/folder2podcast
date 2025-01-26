@@ -3,6 +3,7 @@ export interface Episode {
     title: string;
     fileName: string;
     filePath: string;
+    pubDate: Date;  // 添加发布日期字段
 }
 
 export interface PodcastConfig {
@@ -21,9 +22,9 @@ export interface PodcastSource {
     dirPath: string;
     config: Required<PodcastConfig>;
     episodes: Episode[];
-    coverPath?: string;  // 修改为可选属性
+    coverPath?: string;
 }
 
 export interface ProcessOptions {
-    baseUrl: string;  // 用于生成音频文件的完整URL
+    baseUrl: string;
 }

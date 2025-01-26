@@ -1,14 +1,29 @@
 import { Feed } from 'feed';
 import path from 'path';
+import fs from 'fs-extra';
 import { PodcastSource, ProcessOptions } from '../types';
 
-export function generateFeed(source: PodcastSource, options: ProcessOptions): string {
+async function getFileSize(filePath: string): Promise<number> {
+    try {
+        const stats = await fs.stat(filePath);
+        return stats.size;
+    } catch (error) {
+        console.warn(`Failed to get file size for ${filePath}:`, error);
+        return 0;
+    }
+}
+
+export async function generateFeed(source: PodcastSource, options: ProcessOptions): Promise<string> {
     const { config, episodes, coverPath } = source;
     const { baseUrl } = options;
 
     const feedImage = coverPath
         ? `${baseUrl}/${path.basename(source.dirPath)}/cover.jpg`
         : undefined;
+
+    // 获取最新一集的日期作为Feed更新时间
+    const latestEpisode = episodes[episodes.length - 1];
+    const updateDate = latestEpisode ? latestEpisode.pubDate : new Date();
 
     // 创建Feed实例
     const feed = new Feed({
@@ -20,7 +35,7 @@ export function generateFeed(source: PodcastSource, options: ProcessOptions): st
         image: feedImage,
         favicon: feedImage,
         copyright: `All rights reserved ${new Date().getFullYear()}, ${config.author}`,
-        updated: new Date(),
+        updated: updateDate,
         generator: 'Folder2Cast',
         feedLinks: {
             rss: `${baseUrl}/${path.basename(source.dirPath)}/feed.xml`
@@ -68,6 +83,7 @@ export function generateFeed(source: PodcastSource, options: ProcessOptions): st
     // 添加每个剧集
     for (const episode of episodes) {
         const episodeUrl = `${baseUrl}/${path.basename(source.dirPath)}/${episode.fileName}`;
+        const fileSize = await getFileSize(episode.filePath);
 
         feed.addItem({
             title: episode.title,
@@ -75,6 +91,7 @@ export function generateFeed(source: PodcastSource, options: ProcessOptions): st
             link: episodeUrl,
             description: episode.title,
             content: episode.title,
+            date: episode.pubDate, // 使用生成的发布日期
             author: [
                 {
                     name: config.author,
@@ -82,11 +99,10 @@ export function generateFeed(source: PodcastSource, options: ProcessOptions): st
                     link: config.websiteUrl || baseUrl
                 }
             ],
-            date: new Date(), // 这里可以添加文件的修改时间
             enclosure: {
                 url: episodeUrl,
                 type: getMediaType(episode.fileName),
-                length: 0 // 这里可以添加实际文件大小
+                length: fileSize
             },
             extensions: [
                 {
