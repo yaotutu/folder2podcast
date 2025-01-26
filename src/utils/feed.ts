@@ -19,8 +19,12 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
 
     // 使用封面图片或默认封面
     const feedImage = coverPath
-        ? `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
+        ? `${baseUrl}/audio/${encodeURIComponent(path.basename(source.dirPath))}/cover.jpg`
         : defaultCover;
+
+    // 获取最新一集的日期作为Feed更新时间
+    const latestEpisode = episodes[episodes.length - 1];
+    const updateDate = latestEpisode ? latestEpisode.pubDate : new Date();
 
     // 创建Feed实例
     const feed = new Feed({
@@ -29,48 +33,68 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
         id: baseUrl,
         link: config.websiteUrl || baseUrl,
         language: config.language,
-        image: feedImage,
-        favicon: feedImage,
         copyright: `All rights reserved ${new Date().getFullYear()}, ${config.author}`,
-        updated: new Date(),
+        updated: updateDate,
         generator: 'Folder2Cast',
-        feedLinks: {
-            rss: `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`
-        },
+        feed: `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
         author: {
             name: config.author,
             email: config.email,
             link: config.websiteUrl || baseUrl
+        },
+        image: feedImage
+    });
+
+    // 添加命名空间和根级属性
+    feed.addExtension({
+        name: '_declaration',
+        objects: {
+            _attributes: {
+                version: '1.0',
+                encoding: 'utf-8'
+            }
+        }
+    });
+
+    feed.addExtension({
+        name: '_namespace',
+        objects: {
+            'xmlns:itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
+            'xmlns:atom': 'http://www.w3.org/2005/Atom'
+        }
+    });
+
+    // 添加标准RSS image标签
+    feed.addExtension({
+        name: '_channel',
+        objects: {
+            'image': {
+                'url': feedImage,
+                'title': config.title,
+                'link': config.websiteUrl || baseUrl
+            }
         }
     });
 
     // 添加iTunes特定标签
     feed.addExtension({
-        name: '_xmlns:itunes',
-        objects: {
-            'xmlns:itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'
-        }
-    });
-
-    const itunesExtension: any = {
-        'itunes:author': config.author,
-        'itunes:category': {
-            _attr: { text: config.category }
-        },
-        'itunes:explicit': config.explicit ? 'yes' : 'no',
-        'itunes:owner': {
-            'itunes:name': config.author,
-            'itunes:email': config.email
-        },
-        'itunes:summary': config.description,
-        'itunes:image': {
-            _attr: { href: feedImage }
-        }
-    };
-
-    feed.addExtension({
         name: '_iTunes',
-        objects: itunesExtension
+        objects: {
+            'itunes:image': {
+                _attr: { href: feedImage }
+            },
+            'itunes:category': {
+                _attr: { text: config.category }
+            },
+            'itunes:author': config.author,
+            'itunes:summary': config.description,
+            'itunes:explicit': config.explicit ? 'yes' : 'no',
+            'itunes:owner': {
+                'itunes:name': config.author,
+                'itunes:email': config.email
+            },
+            'itunes:type': 'serial'
+        }
     });
 
     // 添加每个剧集

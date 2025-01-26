@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>半拿铁·西游篇</title>
+        <link>http://localhost:4000</link>
+        <description>西游记故事精选</description>
+        <lastBuildDate>Wed, 08 Jan 2025 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>Folder2Cast</generator>
+        <language>zh-cn</language>
+        <image>
+            <title>半拿铁·西游篇</title>
+            <url>http://localhost:4000/assets/default-cover.png</url>
+            <link>http://localhost:4000</link>
+        </image>
+        <copyright>All rights reserved 2025, 半拿铁</copyright>
+        <atom:link href="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[开门，我是你爸爸牛魔王]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/15.%E5%BC%80%E9%97%A8%EF%BC%8C%E6%88%91%E6%98%AF%E4%BD%A0%E7%88%B8%E7%88%B8%E7%89%9B%E9%AD%94%E7%8E%8B.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/15.%E5%BC%80%E9%97%A8%EF%BC%8C%E6%88%91%E6%98%AF%E4%BD%A0%E7%88%B8%E7%88%B8%E7%89%9B%E9%AD%94%E7%8E%8B.MP3</guid>
+            <pubDate>Wed, 01 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[开门，我是你爸爸牛魔王]]></description>
+            <content:encoded><![CDATA[开门，我是你爸爸牛魔王]]></content:encoded>
+            <enclosure length="90219047" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/15.%E5%BC%80%E9%97%A8%EF%BC%8C%E6%88%91%E6%98%AF%E4%BD%A0%E7%88%B8%E7%88%B8%E7%89%9B%E9%AD%94%E7%8E%8B.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[小敖，我跟虎力大仙斗法，帮我下个雨吧]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/16.%E5%B0%8F%E6%95%96%EF%BC%8C%E6%88%91%E8%B7%9F%E8%99%8E%E5%8A%9B%E5%A4%A7%E4%BB%99%E6%96%97%E6%B3%95%EF%BC%8C%E5%B8%AE%E6%88%91%E4%B8%8B%E4%B8%AA%E9%9B%A8%E5%90%A7.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/16.%E5%B0%8F%E6%95%96%EF%BC%8C%E6%88%91%E8%B7%9F%E8%99%8E%E5%8A%9B%E5%A4%A7%E4%BB%99%E6%96%97%E6%B3%95%EF%BC%8C%E5%B8%AE%E6%88%91%E4%B8%8B%E4%B8%AA%E9%9B%A8%E5%90%A7.MP3</guid>
+            <pubDate>Thu, 02 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[小敖，我跟虎力大仙斗法，帮我下个雨吧]]></description>
+            <content:encoded><![CDATA[小敖，我跟虎力大仙斗法，帮我下个雨吧]]></content:encoded>
+            <enclosure length="100965614" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/16.%E5%B0%8F%E6%95%96%EF%BC%8C%E6%88%91%E8%B7%9F%E8%99%8E%E5%8A%9B%E5%A4%A7%E4%BB%99%E6%96%97%E6%B3%95%EF%BC%8C%E5%B8%AE%E6%88%91%E4%B8%8B%E4%B8%AA%E9%9B%A8%E5%90%A7.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[人家贡的都是猪羊，你们这怎么贡的是小孩儿？]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/17.%E4%BA%BA%E5%AE%B6%E8%B4%A1%E7%9A%84%E9%83%BD%E6%98%AF%E7%8C%AA%E7%BE%8A%EF%BC%8C%E4%BD%A0%E4%BB%AC%E8%BF%99%E6%80%8E%E4%B9%88%E8%B4%A1%E7%9A%84%E6%98%AF%E5%B0%8F%E5%AD%A9%E5%84%BF%EF%BC%9F.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/17.%E4%BA%BA%E5%AE%B6%E8%B4%A1%E7%9A%84%E9%83%BD%E6%98%AF%E7%8C%AA%E7%BE%8A%EF%BC%8C%E4%BD%A0%E4%BB%AC%E8%BF%99%E6%80%8E%E4%B9%88%E8%B4%A1%E7%9A%84%E6%98%AF%E5%B0%8F%E5%AD%A9%E5%84%BF%EF%BC%9F.MP3</guid>
+            <pubDate>Fri, 03 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[人家贡的都是猪羊，你们这怎么贡的是小孩儿？]]></description>
+            <content:encoded><![CDATA[人家贡的都是猪羊，你们这怎么贡的是小孩儿？]]></content:encoded>
+            <enclosure length="80836699" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/17.%E4%BA%BA%E5%AE%B6%E8%B4%A1%E7%9A%84%E9%83%BD%E6%98%AF%E7%8C%AA%E7%BE%8A%EF%BC%8C%E4%BD%A0%E4%BB%AC%E8%BF%99%E6%80%8E%E4%B9%88%E8%B4%A1%E7%9A%84%E6%98%AF%E5%B0%8F%E5%AD%A9%E5%84%BF%EF%BC%9F.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[牛儿不知道哪里去了，放牛的却还在旁边睡觉]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/18.%E7%89%9B%E5%84%BF%E4%B8%8D%E7%9F%A5%E9%81%93%E5%93%AA%E9%87%8C%E5%8E%BB%E4%BA%86%EF%BC%8C%E6%94%BE%E7%89%9B%E7%9A%84%E5%8D%B4%E8%BF%98%E5%9C%A8%E6%97%81%E8%BE%B9%E7%9D%A1%E8%A7%89.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/18.%E7%89%9B%E5%84%BF%E4%B8%8D%E7%9F%A5%E9%81%93%E5%93%AA%E9%87%8C%E5%8E%BB%E4%BA%86%EF%BC%8C%E6%94%BE%E7%89%9B%E7%9A%84%E5%8D%B4%E8%BF%98%E5%9C%A8%E6%97%81%E8%BE%B9%E7%9D%A1%E8%A7%89.MP3</guid>
+            <pubDate>Sat, 04 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[牛儿不知道哪里去了，放牛的却还在旁边睡觉]]></description>
+            <content:encoded><![CDATA[牛儿不知道哪里去了，放牛的却还在旁边睡觉]]></content:encoded>
+            <enclosure length="86461176" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/18.%E7%89%9B%E5%84%BF%E4%B8%8D%E7%9F%A5%E9%81%93%E5%93%AA%E9%87%8C%E5%8E%BB%E4%BA%86%EF%BC%8C%E6%94%BE%E7%89%9B%E7%9A%84%E5%8D%B4%E8%BF%98%E5%9C%A8%E6%97%81%E8%BE%B9%E7%9D%A1%E8%A7%89.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[哥哥，取经多没劲，留在我女儿国当老公吧]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/19.%E5%93%A5%E5%93%A5%EF%BC%8C%E5%8F%96%E7%BB%8F%E5%A4%9A%E6%B2%A1%E5%8A%B2%EF%BC%8C%E7%95%99%E5%9C%A8%E6%88%91%E5%A5%B3%E5%84%BF%E5%9B%BD%E5%BD%93%E8%80%81%E5%85%AC%E5%90%A7.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/19.%E5%93%A5%E5%93%A5%EF%BC%8C%E5%8F%96%E7%BB%8F%E5%A4%9A%E6%B2%A1%E5%8A%B2%EF%BC%8C%E7%95%99%E5%9C%A8%E6%88%91%E5%A5%B3%E5%84%BF%E5%9B%BD%E5%BD%93%E8%80%81%E5%85%AC%E5%90%A7.MP3</guid>
+            <pubDate>Sun, 05 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[哥哥，取经多没劲，留在我女儿国当老公吧]]></description>
+            <content:encoded><![CDATA[哥哥，取经多没劲，留在我女儿国当老公吧]]></content:encoded>
+            <enclosure length="89213855" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/19.%E5%93%A5%E5%93%A5%EF%BC%8C%E5%8F%96%E7%BB%8F%E5%A4%9A%E6%B2%A1%E5%8A%B2%EF%BC%8C%E7%95%99%E5%9C%A8%E6%88%91%E5%A5%B3%E5%84%BF%E5%9B%BD%E5%BD%93%E8%80%81%E5%85%AC%E5%90%A7.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[哪个是假的菩萨也看不出来，这事儿还是得问如来]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/20.%E5%93%AA%E4%B8%AA%E6%98%AF%E5%81%87%E7%9A%84%E8%8F%A9%E8%90%A8%E4%B9%9F%E7%9C%8B%E4%B8%8D%E5%87%BA%E6%9D%A5%EF%BC%8C%E8%BF%99%E4%BA%8B%E5%84%BF%E8%BF%98%E6%98%AF%E5%BE%97%E9%97%AE%E5%A6%82%E6%9D%A5.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/20.%E5%93%AA%E4%B8%AA%E6%98%AF%E5%81%87%E7%9A%84%E8%8F%A9%E8%90%A8%E4%B9%9F%E7%9C%8B%E4%B8%8D%E5%87%BA%E6%9D%A5%EF%BC%8C%E8%BF%99%E4%BA%8B%E5%84%BF%E8%BF%98%E6%98%AF%E5%BE%97%E9%97%AE%E5%A6%82%E6%9D%A5.MP3</guid>
+            <pubDate>Mon, 06 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[哪个是假的菩萨也看不出来，这事儿还是得问如来]]></description>
+            <content:encoded><![CDATA[哪个是假的菩萨也看不出来，这事儿还是得问如来]]></content:encoded>
+            <enclosure length="74237542" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/20.%E5%93%AA%E4%B8%AA%E6%98%AF%E5%81%87%E7%9A%84%E8%8F%A9%E8%90%A8%E4%B9%9F%E7%9C%8B%E4%B8%8D%E5%87%BA%E6%9D%A5%EF%BC%8C%E8%BF%99%E4%BA%8B%E5%84%BF%E8%BF%98%E6%98%AF%E5%BE%97%E9%97%AE%E5%A6%82%E6%9D%A5.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[玉面那个狐狸精，到底比我铁扇好在哪了？]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/21.%E7%8E%89%E9%9D%A2%E9%82%A3%E4%B8%AA%E7%8B%90%E7%8B%B8%E7%B2%BE%EF%BC%8C%E5%88%B0%E5%BA%95%E6%AF%94%E6%88%91%E9%93%81%E6%89%87%E5%A5%BD%E5%9C%A8%E5%93%AA%E4%BA%86%EF%BC%9F.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/21.%E7%8E%89%E9%9D%A2%E9%82%A3%E4%B8%AA%E7%8B%90%E7%8B%B8%E7%B2%BE%EF%BC%8C%E5%88%B0%E5%BA%95%E6%AF%94%E6%88%91%E9%93%81%E6%89%87%E5%A5%BD%E5%9C%A8%E5%93%AA%E4%BA%86%EF%BC%9F.MP3</guid>
+            <pubDate>Tue, 07 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[玉面那个狐狸精，到底比我铁扇好在哪了？]]></description>
+            <content:encoded><![CDATA[玉面那个狐狸精，到底比我铁扇好在哪了？]]></content:encoded>
+            <enclosure length="95906218" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/21.%E7%8E%89%E9%9D%A2%E9%82%A3%E4%B8%AA%E7%8B%90%E7%8B%B8%E7%B2%BE%EF%BC%8C%E5%88%B0%E5%BA%95%E6%AF%94%E6%88%91%E9%93%81%E6%89%87%E5%A5%BD%E5%9C%A8%E5%93%AA%E4%BA%86%EF%BC%9F.MP3"/>
+        </item>
+        <item>
+            <title><![CDATA[我们就只想吟诗作对，怎么就打死我们了]]></title>
+            <link>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/22.%E6%88%91%E4%BB%AC%E5%B0%B1%E5%8F%AA%E6%83%B3%E5%90%9F%E8%AF%97%E4%BD%9C%E5%AF%B9%EF%BC%8C%E6%80%8E%E4%B9%88%E5%B0%B1%E6%89%93%E6%AD%BB%E6%88%91%E4%BB%AC%E4%BA%86.MP3</link>
+            <guid>http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/22.%E6%88%91%E4%BB%AC%E5%B0%B1%E5%8F%AA%E6%83%B3%E5%90%9F%E8%AF%97%E4%BD%9C%E5%AF%B9%EF%BC%8C%E6%80%8E%E4%B9%88%E5%B0%B1%E6%89%93%E6%AD%BB%E6%88%91%E4%BB%AC%E4%BA%86.MP3</guid>
+            <pubDate>Wed, 08 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[我们就只想吟诗作对，怎么就打死我们了]]></description>
+            <content:encoded><![CDATA[我们就只想吟诗作对，怎么就打死我们了]]></content:encoded>
+            <enclosure length="90444327" type="audio/mpeg" url="http://localhost:4000/audio/%E5%8D%8A%E6%8B%BF%E9%93%81%C2%B7%E8%A5%BF%E6%B8%B8%E7%AF%87/22.%E6%88%91%E4%BB%AC%E5%B0%B1%E5%8F%AA%E6%83%B3%E5%90%9F%E8%AF%97%E4%BD%9C%E5%AF%B9%EF%BC%8C%E6%80%8E%E4%B9%88%E5%B0%B1%E6%89%93%E6%AD%BB%E6%88%91%E4%BB%AC%E4%BA%86.MP3"/>
+        </item>
+    </channel>
+</rss>
