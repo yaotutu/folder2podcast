@@ -42,4 +42,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/podcasts || exit 1
 
 # 启动命令
-CMD ["node", "dist/index.js", "/podcasts", "3000"]
+CMD ["node", "dist/index.js"]

@@ -16,10 +16,34 @@
 
 ## 🚀 快速开始
 
+### 环境变量配置
+
+支持通过环境变量配置服务：
+
+- `AUDIO_DIR`: 音频文件夹路径（默认: `./audio`）
+- `PORT`: 服务器端口（默认: `3000`）
+
+### 本地开发
+
+```bash
+# 安装依赖
+npm install
+
+# 开发模式启动（使用默认配置）
+npm run start:dev
+
+# 或者自定义配置启动
+PORT=8080 AUDIO_DIR=/path/to/audiobooks npm run dev
+```
+
+### Docker 部署
+
 ```bash
 # 启动你的播客服务器
 docker run -d \
   -p 3000:3000 \
+  -e PORT=3000 \
+  -e AUDIO_DIR=/podcasts \
   -v /path/to/audiobooks:/podcasts:ro \
   folder2podcast
 ```
