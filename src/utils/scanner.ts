@@ -16,6 +16,11 @@ export async function scanAudioFiles(dirPath: string, config: Required<PodcastCo
     const episodes: Episode[] = [];
 
     for (const file of files) {
+        // 跳过隐藏文件（以 . 开头的文件）
+        if (file.startsWith('.')) {
+            continue;
+        }
+
         if (!validateFileName(file)) {
             continue;
         }
