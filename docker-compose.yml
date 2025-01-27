@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./audio:/podcasts:ro  # 以只读方式挂载音频文件夹
+      - ./audio:/podcasts  # 挂载音频文件夹
     environment:
       - NODE_ENV=production
       - PORT=3000

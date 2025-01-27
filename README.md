@@ -24,12 +24,41 @@ Folder2Cast 是一个专业的播客源生成工具，能够将本地音频文�
    - 确保文件命名规范（如：01-序章.mp3）
 
 2. **启动服务**
+
+   方式一：Docker 命令直接运行
    ```bash
    docker run -d \
      -p 3000:3000 \
      -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
      folder2podcast
+   ```
+
+   方式二：使用 Docker Compose（推荐）
+   ```yaml
+   # docker-compose.yml
+   version: '3.8'
+   services:
+     folder2podcast:
+       image: folder2podcast
+       ports:
+         - "3000:3000"
+       volumes:
+         - ./audiobooks:/podcasts
+       environment:
+         - PORT=3000
+         - AUDIO_DIR=/podcasts
+       restart: unless-stopped
+       healthcheck:
+         test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
+         interval: 30s
+         timeout: 10s
+         retries: 3
+   ```
+
+   运行：
+   ```bash
+   docker compose up -d
    ```
 
 3. **验证部署**
