@@ -376,5 +376,3 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
   * 可行的实现方案
 
 ---
-
-Folder2Cast 项目维护团队
