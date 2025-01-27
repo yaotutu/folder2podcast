@@ -1,45 +1,46 @@
 [![SVG Banners](https://svg-banners.vercel.app/api?type=rainbow&text1=Folder2Podcast📻&width=800&height=400)](https://github.com/Akshay090/svg-banners)
 
-# 🎙️ Folder2Cast
+# 🎙️ Folder2Podcast RSS
 
-> 将本地音频文件夹转换为标准播客订阅源
+> 一键将本地音频文件夹转换为私人播客 RSS 订阅源
 
 ## 项目背景
 
-在数字音频内容日益丰富的今天，我们经常会收藏各类优质音频内容：有声小说、教育课程、经典播客节目等。然而，传统音频播放器在处理长音频内容时存在一些固有的局限性：
+播客 RSS 是一个强大的音频分发标准，它不仅仅是一个简单的音频列表，更提供了：
 
-- 难以追踪收听进度
-- 无法记住上次播放位置
-- 缺乏跨设备的播放记录同步
-- 不支持系统化的内容管理
+- 🔖 完整的播放进度记录
+- 🎯 精确的断点续播功能
+- 🔄 跨设备的收听历史同步
+- 📱 多平台收听支持
+- 🎨 丰富的媒体信息展示
 
-Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件夹转换为标准的播客 RSS 订阅源，让您可以：
+Folder2Podcast RSS 让您可以轻松地把本地音频文件夹转换为私人播客 RSS 源，享受专业播客客户端的所有高级特性：
 
-- 使用专业播客客户端管理和收听内容
-- 自动记录和同步播放进度
-- 支持断点续听
-- 跨设备同步收听历史
-- 系统化管理音频内容
+- 🎧 使用您最喜欢的播客应用收听（如 Apple Podcasts、Pocket Casts）
+- 📱 在任何设备上继续上次的收听进度
+- 🔄 自动同步多设备间的收听历史
+- 📚 系统化管理您的有声内容库
+- 🎯 智能记住每个音频的播放位置
 
-只需简单的配置，您就能享受到专业播客客户端提供的所有高级功能。
+只需一个命令部署，让您的本地音频秒变私人播客订阅源。
 
 ## ✨ 核心功能
 
-- 📱 **专业播放体验** - 支持断点续听、收听进度同步等高级功能
-- 🎯 **智能序列化** - 自动识别剧集顺序，轻松管理系列内容
-- 🌐 **双路径访问** - 支持原生中文路径和英文别名的灵活访问
-- 🔄 **实时同步** - 自动检测并更新音频内容变更
-- 🎨 **个性化配置** - 支持全局和目录级别的精细化设置
-- 🚀 **快速部署** - 提供 Docker 容器化和本地部署两种方式
+- 🎯 **标准 RSS 实现** - 完整支持播客 RSS 2.0 规范和 iTunes 专有标签
+- 📱 **完美客户端兼容** - 适配所有主流播客客户端
+- 🔄 **智能序列化** - 自动分析文件名构建剧集顺序，生成发布时间
+- 🌐 **灵活访问** - 支持中文路径和英文别名双向访问
+- 🎨 **个性化配置** - 支持播客元数据自定义（标题、作者、封面等）
+- 🚀 **容器化部署** - 提供 Docker 一键部署方案
 
-## 🚀 快速部署指南
+## 🚀 快速开始
 
-### 使用 Docker 部署（推荐）
+### Docker 一键部署（推荐）
 
-1. **环境准备**
+1. **准备工作**
    - 安装 Docker
-   - 准备音频文件目录
-   - 确保文件命名规范（如：01-序章.mp3）
+   - 准备音频文件目录（按播客内容分文件夹）
+   - 规范文件命名（如：01-第一章.mp3、第02集.mp3）
 
 ⚠️ **重要：BASE_URL 配置说明**
 
@@ -165,16 +166,6 @@ BASE_URL=http://your-domain.com
 2. 等待内容同步完成
 3. 截取播客详情页面的屏幕截图
 
-### RSS Feed 结构
-
-![RSS Feed 结构](docs/images/rss-feed-structure.png)
-
-*图示：生成的标准 RSS Feed 结构*
-
-要获取 Feed 截图：
-1. 访问您的播客 Feed URL（例如：`http://localhost:3000/audio/your-podcast/feed.xml`）
-2. 使用浏览器的开发者工具格式化 XML
-3. 截取包含完整结构的屏幕截图
 
 ## 📦 目录结构规范
 
@@ -194,53 +185,51 @@ audiobooks/
     └── 03.尾声.mp3      # 便于维护管理
 ```
 
-## ⚙️ 配置文件说明
+## ⚙️ 播客配置文件
 
-播客配置文件 `podcast.json` 参数说明：
+每个播客文件夹都可以包含一个独立的 `podcast.json` 配置文件，用于自定义该播客的展示和行为。这种设计允许您为每个播客系列设置不同的配置。
 
+### 配置文件位置
+```
+audiobooks/
+├── 播客系列1/
+│   ├── 01-第一章.mp3
+│   └── podcast.json    # 播客系列1的独立配置
+└── 播客系列2/
+    ├── 01.序章.mp3
+    └── podcast.json    # 播客系列2的独立配置
+```
+
+### 配置参数说明
 ```json
 {
-  "title": "播客标题",
-  "description": "播客描述",
-  "author": "作者名称",
-  "alias": "podcast-name",         // 用于URL访问的英文标识符
-  "language": "zh-cn",             // 语言代码
-  "category": "科技",              // 播客分类
-  "explicit": false,               // 内容分级
-  "email": "contact@example.com",  // 联系邮箱
-  "websiteUrl": "https://example.com", // 相关网站
-  "titleFormat": "full"           // 标题格式：clean(清理前缀) 或 full(完整文件名)
+  "title": "播客标题",            // 在播客客户端中显示的标题
+  "description": "播客描述",      // 播客简介
+  "author": "作者名称",          // 作者信息
+  "alias": "podcast-name",      // URL访问的英文标识符（选填）
+  "language": "zh-cn",          // 语言代码（RFC 5646标准）
+  "category": "科技",           // 播客分类
+  "explicit": false,           // 内容分级标记
+  "email": "contact@example.com", // 联系邮箱（选填）
+  "websiteUrl": "https://example.com", // 相关网站（选填）
+  "titleFormat": "full"        // 标题格式：clean或full
 }
 ```
 
-配置说明：
-- title/description: 在播客客户端中显示的基本信息
-- alias: 必须为小写字母、数字和连字符的组合
-- language: 遵循 RFC 5646 标准的语言代码
-- explicit: 用于内容分级，标记是否包含敏感内容
+### 重要说明
+- 每个播客可以有自己的独立配置，互不影响
+- 配置文件是可选的，未配置时使用默认值
+- 文件夹中的配置优先级高于全局环境变量
+- 支持热更新：修改配置文件后自动生效
 
-## 🎯 一键部署
+### 配置项详解
+- **title/description**：播客的基本展示信息
+- **alias**：用于创建易记的URL访问路径，必须是小写字母、数字和连字符的组合
+- **language**：遵循 RFC 5646 标准的语言代码（如：zh-cn, en-us）
+- **category**：播客分类，影响在客户端中的分类展示
+- **explicit**：内容分级标记，用于提示是否包含敏感内容
+- **titleFormat**：控制该播客的文件名显示方式，可覆盖全局设置
 
-使用Docker Compose更优雅：
-
-```yaml
-version: '3.8'
-services:
-  folder2podcast:
-    image: yaotutu/folder2podcast
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./audiobooks:/podcasts:ro
-    environment:
-      - BASE_URL=http://your-server-ip:3000
-    restart: unless-stopped
-    # 可选：健康检查
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
-      interval: 1m
-      timeout: 10s
-```
 
 ## 🌐 URL访问规范
 
@@ -420,14 +409,111 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
      * 优化目录结构
      * 执行数据备份
 
-## 📱 支持的播客客户端
+## ⚙️ 环境变量配置
 
-- Apple Podcasts
-- Pocket Casts
-- Overcast
-- Castro
-- Google Podcasts
-...基本上所有支持自定义RSS的播客客户端！
+系统支持多个环境变量来自定义行为。以下是完整的环境变量列表：
+
+| 环境变量 | 说明 | 默认值 | 示例 |
+|---------|------|--------|------|
+| `AUDIO_DIR` | 音频文件根目录路径 | `./audio` | `/path/to/audiobooks` |
+| `PORT` | 服务器监听端口 | `3000` | `8080` |
+| `BASE_URL` | 服务器基础URL，用于生成RSS feed中的链接 | `http://localhost:端口号` | `http://192.168.55.222:3000` |
+| `TITLE_FORMAT` | 剧集标题显示格式 | `full` | `clean` 或 `full` |
+
+详细说明：
+
+1. **AUDIO_DIR**
+   - 用途：指定存放音频文件的根目录
+   - 默认值：当前目录下的 audio 文件夹
+   - 注意：目录必须具有读权限
+
+2. **PORT**
+   - 用途：指定服务器监听的端口号
+   - 默认值：3000
+   - 说明：如果设置的端口被占用，服务将无法启动
+
+3. **BASE_URL**
+   - 用途：生成RSS feed中的所有URL
+   - 默认值：`http://localhost:端口号`
+   - 重要性：必须设置正确的值以确保音频文件可访问
+   - 格式：必须包含协议（http/https）
+
+4. **TITLE_FORMAT**
+   - 用途：控制剧集标题的显示格式
+   - 默认值：`full`（保留完整文件名）
+   - 可选值：
+     * `full`: 保留完整文件名（不含扩展名）
+     * `clean`: 移除数字前缀和分隔符
+
+使用示例：
+
+```bash
+# Docker 运行示例
+docker run -d \
+  -p 3000:3000 \
+  -v /audiobooks:/podcasts \
+  -e AUDIO_DIR=/podcasts \
+  -e PORT=3000 \
+  -e BASE_URL=http://192.168.55.222:3000 \
+  -e TITLE_FORMAT=full \
+  yaotutu/folder2podcast
+```
+
+配置优先级：
+- 环境变量 > 默认值
+- podcast.json 中的配置 > 环境变量（针对特定播客）
+
+## 📱 客户端支持与使用指南
+
+### 支持的播客客户端
+
+几乎所有支持自定义 RSS 的播客客户端都可以使用：
+
+- Apple Podcasts（iOS、Mac）
+- Pocket Casts（全平台）
+- Overcast（iOS）
+- Castro（iOS）
+- Google Podcasts（Android、Web）
+- AntennaPod（Android）
+
+### 使用流程
+
+1. **获取订阅链接**
+   - 访问 `http://your-server:3000/podcasts`
+   - 找到您想订阅的播客系列
+   - 复制对应的 RSS Feed URL
+
+2. **添加到播客客户端**
+   - 打开您喜欢的播客客户端
+   - 找到"添加播客"或"添加 RSS Feed"
+   - 粘贴您的 Feed URL
+   - 等待内容同步完成
+
+3. **开始使用**
+   - 所有剧集会自动同步到客户端
+   - 收听进度会跨设备同步
+   - 支持后台下载和离线播放
+   - 可以添加章节备注（部分客户端支持）
+
+### RSS 最佳实践
+
+1. **内容组织**
+   - 每个播客系列使用独立文件夹
+   - 使用 podcast.json 配置元数据
+   - 添加 cover.jpg 设置封面（推荐 1400x1400px）
+   - 遵循标准的文件命名规范（01-、02-）
+
+2. **元数据优化**
+   - 完善播客标题和描述
+   - 选择恰当的分类（category）
+   - 提供完整的作者信息
+   - 使用英文别名提高兼容性
+
+3. **访问优化**
+   - 正确配置 BASE_URL
+   - 确保服务器稳定可访问
+   - 音频文件命名避免特殊字符
+   - 定期备份重要数据
 
 ## 💡 使用提示
 
