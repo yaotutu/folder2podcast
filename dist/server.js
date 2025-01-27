@@ -148,8 +148,8 @@ class PodcastServer {
                             ? `/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
                             : DEFAULT_COVER,
                         feedUrl: {
-                            original: `/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
-                            alias: source.config.alias ? `/audio/${source.config.alias}/feed.xml` : null
+                            original: `${this.baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
+                            alias: source.config.alias ? `${this.baseUrl}/audio/${source.config.alias}/feed.xml` : null
                         },
                         episodeCount: source.episodes.length,
                         latestEpisodeDate: source.episodes.length > 0
