@@ -14,7 +14,8 @@
         "watch": "tsc -w",
         "test": "echo \"No tests specified\" && exit 0",
         "start:dev": "cross-env PORT=3000 AUDIO_DIR=./audio ts-node src/index.ts",
-        "start:prod": "cross-env PORT=3000 AUDIO_DIR=./audio node dist/index.js"
+        "start:prod": "cross-env PORT=3000 AUDIO_DIR=./audio node dist/index.js",
+        "tag": "node scripts/tag-version.js"
     },
     "keywords": [
         "podcast",
