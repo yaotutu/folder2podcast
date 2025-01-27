@@ -228,14 +228,6 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
 第一章001.mp3  → 第1集：第一章
 ```
 
-### 批量重命名技巧
-
-将所有文件按顺序重命名（Mac/Linux）：
-```bash
-ls -1v *.mp3 | cat -n | while read n f; do 
-  mv "$f" "$(printf '%02d-%s' $n "${f#*-}")"; 
-done
-```
 
 ### 剧集时间管理
 
