@@ -28,8 +28,8 @@ export function getEnvConfig(): EnvConfig {
         AUDIO_DIR: process.env.AUDIO_DIR || defaultAudioDir,
         // 服务器端口，默认3000
         PORT: port,
-        // 标题显示策略，默认为clean（清理后的标题）
-        TITLE_FORMAT: (process.env.TITLE_FORMAT as 'clean' | 'full') || 'clean',
+        // 标题显示策略，默认为full（完整文件名，不含扩展名）
+        TITLE_FORMAT: (process.env.TITLE_FORMAT as 'clean' | 'full') || 'full',
         // 服务器基础URL，默认为 http://localhost:端口号
         BASE_URL: process.env.BASE_URL || defaultBaseUrl
     };
