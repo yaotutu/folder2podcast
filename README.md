@@ -41,6 +41,30 @@ Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件�
    - 准备音频文件目录
    - 确保文件命名规范（如：01-序章.mp3）
 
+⚠️ **重要：BASE_URL 配置说明**
+
+在部署到服务器时，必须正确配置 BASE_URL 环境变量，这直接影响到：
+- RSS feed 中的音频文件链接
+- 封面图片链接
+- 所有静态资源的访问路径
+
+正确配置示例：
+```bash
+# 本地测试时
+BASE_URL=http://localhost:3000
+
+# 部署到服务器时（请替换为实际的服务器IP或域名）
+BASE_URL=http://192.168.55.222:3000
+# 或者
+BASE_URL=http://your-domain.com
+```
+
+注意事项：
+- BASE_URL 必须包含协议前缀（http:// 或 https://）
+- 如果使用了自定义端口，必须包含端口号
+- 结尾不要添加斜杠 '/'
+- 确保该地址可以从客户端（如播客APP）访问到
+
 2. **启动服务**
 
    方式一：Docker 命令直接运行
@@ -49,6 +73,7 @@ Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件�
      -p 3000:3000 \
      -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
+     -e BASE_URL=http://your-server-ip:3000 \
      yaotutu/folder2podcast
    ```
 
@@ -66,6 +91,7 @@ Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件�
        environment:
          - PORT=3000
          - AUDIO_DIR=/podcasts
+         - BASE_URL=http://your-server-ip:3000
        restart: unless-stopped
        healthcheck:
          test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
@@ -206,6 +232,8 @@ services:
       - "3000:3000"
     volumes:
       - ./audiobooks:/podcasts:ro
+    environment:
+      - BASE_URL=http://your-server-ip:3000
     restart: unless-stopped
     # 可选：健康检查
     healthcheck:
@@ -310,6 +338,7 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
    - `AUDIO_DIR`: 音频文件根目录
    - `PORT`: 服务器端口
    - `TITLE_FORMAT`: 标题显示格式（clean/full）
+   - `BASE_URL`: 服务器基础URL（例如：http://192.168.55.222:3000），默认为 http://localhost:端口号
 
 2. **播客配置**（podcast.json）
    - 支持每个播客文件夹单独配置
@@ -351,8 +380,13 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
 
 1. **系统诊断**
    - 目录权限验证
-     * 确认音频文件的读取权限
-     * 验证配置文件的访问权限
+      * 确认音频文件的读取权限
+      * 验证配置文件的访问权限
+   - BASE_URL 配置验证
+      * 检查 BASE_URL 是否正确设置（必须包含协议和端口）
+      * 确认 BASE_URL 可以从外部访问
+      * 验证生成的 RSS feed 中的链接是否正确
+      * 测试音频文件和封面图片是否可访问
    - 资源完整性检查
      * 确认封面图片格式(cover.jpg，建议使用正方形图片)
      * 验证音频文件的有效性
