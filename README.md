@@ -27,7 +27,7 @@ Folder2Cast 是一个专业的播客源生成工具，能够将本地音频文�
    ```bash
    docker run -d \
      -p 3000:3000 \
-     -v /path/to/audiobooks:/podcasts:ro \
+     -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
      folder2podcast
    ```
