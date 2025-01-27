@@ -2,6 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import { PodcastConfig } from '../types';
 
+import { getEnvConfig } from './env';
+
 export const DEFAULT_CONFIG: Required<PodcastConfig> = {
     title: '',          // 将在处理时被文件夹名替换
     description: '',    // 将在处理时被文件夹名替换
@@ -11,7 +13,8 @@ export const DEFAULT_CONFIG: Required<PodcastConfig> = {
     explicit: false,
     email: '',
     websiteUrl: '',
-    alias: ''          // 将在处理时被文件夹名转为安全的URL字符串替换
+    alias: '',         // 将在处理时被文件夹名转为安全的URL字符串替换
+    titleFormat: getEnvConfig().TITLE_FORMAT  // 使用全局环境变量中的配置
 };
 
 function generateDefaultAlias(dirName: string): string {

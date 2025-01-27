@@ -11,7 +11,7 @@ export async function validatePodcastDirectory(dirPath: string): Promise<void> {
     }
 }
 
-export async function scanAudioFiles(dirPath: string): Promise<Episode[]> {
+export async function scanAudioFiles(dirPath: string, config: Required<PodcastConfig>): Promise<Episode[]> {
     const files = await fs.readdir(dirPath);
     const episodes: Episode[] = [];
 
@@ -21,7 +21,7 @@ export async function scanAudioFiles(dirPath: string): Promise<Episode[]> {
         }
 
         try {
-            const episode = createEpisode(file, dirPath);
+            const episode = createEpisode(file, dirPath, config.titleFormat);
             episodes.push(episode);
         } catch (error) {
             console.warn(`Skipping invalid file: ${file}`, error);
@@ -35,17 +35,15 @@ export async function processPodcastSource(dirPath: string): Promise<PodcastSour
     // 验证目录结构
     await validatePodcastDirectory(dirPath);
 
-    // 读取配置和扫描音频文件
-    const [rawConfig, episodes] = await Promise.all([
-        readConfig(dirPath),
-        scanAudioFiles(dirPath)
-    ]);
-
-    // 验证配置
+    // 先读取和验证配置
+    const rawConfig = await readConfig(dirPath);
     validateConfig(rawConfig);
 
     // 获取完整配置（包含默认值和生成的别名）
-    const config = getConfigWithDefaults(dirPath, rawConfig);
+    const fullConfig = getConfigWithDefaults(dirPath, rawConfig);
+
+    // 使用完整配置来扫描音频文件
+    const episodes = await scanAudioFiles(dirPath, fullConfig);
 
     // 检查cover.jpg是否存在，但不强制要求
     const coverPath = path.join(dirPath, 'cover.jpg');
@@ -54,7 +52,7 @@ export async function processPodcastSource(dirPath: string): Promise<PodcastSour
     return {
         dirName: path.basename(dirPath),
         dirPath,
-        config,
+        config: fullConfig,
         episodes,
         coverPath: hasCover ? coverPath : undefined
     };

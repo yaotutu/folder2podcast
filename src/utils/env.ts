@@ -5,6 +5,8 @@ export interface EnvConfig {
     AUDIO_DIR: string;
     // 服务器端口
     PORT: number;
+    // 全局标题显示策略：clean=清理后的标题，full=完整文件名
+    TITLE_FORMAT: 'clean' | 'full';
 }
 
 /**
@@ -19,6 +21,8 @@ export function getEnvConfig(): EnvConfig {
         // 音频文件夹路径，默认为当前目录下的 audio 文件夹
         AUDIO_DIR: process.env.AUDIO_DIR || defaultAudioDir,
         // 服务器端口，默认3000
-        PORT: parseInt(process.env.PORT || String(defaultPort), 10)
+        PORT: parseInt(process.env.PORT || String(defaultPort), 10),
+        // 标题显示策略，默认为clean（清理后的标题）
+        TITLE_FORMAT: (process.env.TITLE_FORMAT as 'clean' | 'full') || 'clean'
     };
 }

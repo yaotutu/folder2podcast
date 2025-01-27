@@ -39,9 +39,12 @@ export function generatePubDate(episodeNumber: number): Date {
     return pubDate;
 }
 
-export function createEpisode(fileName: string, dirPath: string): Episode {
+export function createEpisode(fileName: string, dirPath: string, titleFormat: 'clean' | 'full' = 'clean'): Episode {
     const number = parseEpisodeNumber(fileName);
-    const title = parseEpisodeTitle(fileName);
+    // 根据配置决定使用原始文件名（不含扩展名）还是清理后的标题
+    const title = titleFormat === 'clean'
+        ? parseEpisodeTitle(fileName)
+        : fileName.replace(/\.[^/.]+$/, ''); // 仅移除文件扩展名
     const pubDate = generatePubDate(number);
 
     return {

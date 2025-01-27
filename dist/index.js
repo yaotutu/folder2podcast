@@ -2,25 +2,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
+const env_1 = require("./utils/env");
 async function main() {
     try {
-        // 获取命令行参数
-        const [, , audioDir = 'audio', portStr = '3000'] = process.argv;
-        const port = parseInt(portStr, 10);
-        // 调试日志
-        console.log('命令行参数：', {
-            raw: process.argv,
-            audioDir,
-            portStr,
-            port
+        // 获取环境变量配置
+        const config = (0, env_1.getEnvConfig)();
+        // 输出当前配置信息
+        console.log('当前配置：', {
+            AUDIO_DIR: config.AUDIO_DIR,
+            PORT: config.PORT
         });
-        if (isNaN(port)) {
-            console.error('错误: 端口号必须是有效的数字');
-            console.error('用法: folder2podcast [音频目录] [端口号]');
-            console.error('示例: folder2podcast ./podcasts 3000');
-            process.exit(1);
-        }
-        const server = new server_1.PodcastServer(audioDir, port);
+        const server = new server_1.PodcastServer(config.AUDIO_DIR, config.PORT);
         // 优雅关闭服务器
         process.on('SIGINT', async () => {
             console.log('\n正在关闭服务器...');
@@ -30,7 +22,7 @@ async function main() {
         // 初始化并启动服务器
         console.log('正在初始化播客服务器...');
         await server.initialize();
-        console.log(`正在启动服务器 (端口: ${port})...`);
+        console.log(`正在启动服务器 (端口: ${config.PORT})...`);
         await server.start();
     }
     catch (error) {

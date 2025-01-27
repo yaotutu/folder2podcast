@@ -40,9 +40,12 @@ function generatePubDate(episodeNumber) {
     pubDate.setDate(BASE_DATE.getDate() + episodeNumber - 1); // -1是因为第一集应该是基准日期
     return pubDate;
 }
-function createEpisode(fileName, dirPath) {
+function createEpisode(fileName, dirPath, titleFormat = 'clean') {
     const number = parseEpisodeNumber(fileName);
-    const title = parseEpisodeTitle(fileName);
+    // 根据配置决定使用原始文件名（不含扩展名）还是清理后的标题
+    const title = titleFormat === 'clean'
+        ? parseEpisodeTitle(fileName)
+        : fileName.replace(/\.[^/.]+$/, ''); // 仅移除文件扩展名
     const pubDate = generatePubDate(number);
     return {
         number,

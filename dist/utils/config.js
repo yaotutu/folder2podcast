@@ -9,6 +9,7 @@ exports.validateConfig = validateConfig;
 exports.getConfigWithDefaults = getConfigWithDefaults;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
+const env_1 = require("./env");
 exports.DEFAULT_CONFIG = {
     title: '', // 将在处理时被文件夹名替换
     description: '', // 将在处理时被文件夹名替换
@@ -18,7 +19,8 @@ exports.DEFAULT_CONFIG = {
     explicit: false,
     email: '',
     websiteUrl: '',
-    alias: '' // 将在处理时被文件夹名转为安全的URL字符串替换
+    alias: '', // 将在处理时被文件夹名转为安全的URL字符串替换
+    titleFormat: (0, env_1.getEnvConfig)().TITLE_FORMAT // 使用全局环境变量中的配置
 };
 function generateDefaultAlias(dirName) {
     // 将文件夹名转换为安全的URL字符串
