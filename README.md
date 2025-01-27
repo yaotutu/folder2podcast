@@ -49,7 +49,7 @@ Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件�
      -p 3000:3000 \
      -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
-     folder2podcast
+     yaotutu/folder2podcast
    ```
 
    方式二：使用 Docker Compose（推荐）
@@ -58,7 +58,7 @@ Folder2Cast 正是为解决这些问题而诞生。通过将本地音频文件�
    version: '3.8'
    services:
      folder2podcast:
-       image: folder2podcast
+       image: yaotutu/folder2podcast
        ports:
          - "3000:3000"
        volumes:
@@ -201,7 +201,7 @@ audiobooks/
 version: '3.8'
 services:
   folder2podcast:
-    image: folder2podcast
+    image: yaotutu/folder2podcast
     ports:
       - "3000:3000"
     volumes:
