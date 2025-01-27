@@ -4,6 +4,7 @@ import path from 'path';
 import { ProcessOptions, PodcastSource } from './types';
 import { processPodcastSource } from './utils/scanner';
 import { generateFeed } from './utils/feed';
+import { getEnvConfig } from './utils/env';
 
 // 设置默认封面路径为assets中的图片
 const DEFAULT_COVER = '/assets/default-cover.png';  // 改为.png扩展名
@@ -19,7 +20,8 @@ export class PodcastServer {
     constructor(audioDir: string, port: number) {
         this.audioDir = path.resolve(audioDir);
         this.port = port;
-        this.baseUrl = `http://localhost:${port}`;
+        const config = getEnvConfig();
+        this.baseUrl = config.BASE_URL;
         this.server = fastify({
             logger: true
         });
