@@ -244,6 +244,19 @@ Configuration priority:
 - Environment variables > Default values
 - podcast.json config > Environment variables (for specific podcasts)
 
+## 📱 Preview
+
+### Podcast Client Display
+
+![Podcast Client Preview](docs/images/podcast-client-preview.png)
+
+*Screenshot: Display in Apple Podcasts*
+
+To get similar screenshots:
+1. Subscribe to your podcast using any podcast client (like Apple Podcasts)
+2. Wait for content to sync
+3. Take a screenshot of the podcast details page
+
 ## ⚙️ Podcast Configuration File
 
 Each podcast folder can contain its own `podcast.json` configuration file to customize that podcast's presentation and behavior. This design allows different settings for each podcast series.
