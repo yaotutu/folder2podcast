@@ -1,0 +1,37 @@
+name: Repository Activity Notifications
+
+on:
+  issues:
+    types: [opened]
+  watch:
+    types: [started]
+  fork:
+    types: [created]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Bark notification for new issue
+        if: github.event_name == 'issues'
+        run: |
+          TITLE="新Issue提醒"
+          BODY="${{ github.event.issue.title }} by ${{ github.event.issue.user.login }}"
+          curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.issue.html_url }}"
+
+      # 在GitHub API中，star操作使用'watch'事件名
+      # 这是由于历史原因：最初GitHub将star功能称为watch
+      # 详见：https://docs.github.com/en/webhooks/webhook-events-and-payloads#watch
+      - name: Send Bark notification for new star
+        if: github.event_name == 'watch'
+        run: |
+          TITLE="新Star提醒"
+          BODY="${{ github.repository }}收到来自${{ github.event.sender.login }}的star"
+          curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.sender.html_url }}"
+
+      - name: Send Bark notification for new fork
+        if: github.event_name == 'fork'
+        run: |
+          TITLE="新Fork提醒"
+          BODY="${{ github.repository }}被${{ github.event.forkee.owner.login }}fork了"
+          curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.forkee.html_url }}"
