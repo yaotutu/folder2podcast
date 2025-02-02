@@ -1,9 +1,11 @@
 import path from 'path';
 import { Episode } from '../types';
+import crypto from 'crypto';
+import fs from 'fs';
 
 const BASE_DATE = new Date('2024-12-18T00:00:00.000Z');
 
-export function parseEpisodeNumber(fileName: string): number {
+export function parseEpisodeNumber(fileName: string): number | null {
     // 首先尝试匹配文件名开头的数字（优先级更高）
     const frontMatch = fileName.match(/^(\d+)/);
     if (frontMatch) {
@@ -16,7 +18,8 @@ export function parseEpisodeNumber(fileName: string): number {
         return parseInt(backMatch[1], 10);
     }
 
-    throw new Error(`Invalid filename: ${fileName} - Must contain a number either at start or before extension`);
+    // 如果没有找到数字，返回 null
+    return null;
 }
 
 export function parseEpisodeTitle(fileName: string): string {
@@ -39,19 +42,32 @@ export function generatePubDate(episodeNumber: number): Date {
     return pubDate;
 }
 
+function getFileMetadata(filePath: string) {
+    const stats = fs.statSync(filePath);
+    return {
+        // 使用文件的创建时间作为发布日期
+        pubDate: new Date(stats.ctimeMs),
+        // 使用创建时间的时间戳和文件大小生成一个稳定的排序值
+        sortValue: Math.floor(stats.ctimeMs / 1000) * 10000 +
+            parseInt(String(stats.size).slice(0, 4))
+    };
+}
+
 export function createEpisode(fileName: string, dirPath: string, titleFormat: 'clean' | 'full' = 'clean'): Episode {
     const number = parseEpisodeNumber(fileName);
-    // 根据配置决定使用原始文件名（不含扩展名）还是清理后的标题
-    const title = titleFormat === 'clean'
+    const title = titleFormat === 'clean' && number !== null
         ? parseEpisodeTitle(fileName)
-        : fileName.replace(/\.[^/.]+$/, ''); // 仅移除文件扩展名
-    const pubDate = generatePubDate(number);
+        : fileName.replace(/\.[^/.]+$/, '');
+
+    const filePath = path.join(dirPath, fileName);
+    const { pubDate, sortValue } = getFileMetadata(filePath);
 
     return {
-        number,
+        // 如果文件名中有数字，使用该数字，否则使用基于文件元数据的排序值
+        number: number !== null ? number : sortValue,
         title,
         fileName,
-        filePath: path.join(dirPath, fileName),
+        filePath,
         pubDate
     };
 }
@@ -63,15 +79,5 @@ export function sortEpisodes(episodes: Episode[]): Episode[] {
 export function validateFileName(fileName: string): boolean {
     // 检查是否是支持的音频格式
     const supportedFormats = /\.(mp3|m4a|wav)$/i;
-    if (!supportedFormats.test(fileName)) {
-        return false;
-    }
-
-    // 检查文件名是否符合以下任一格式：
-    // 1. 以数字开头（优先格式）
-    // 2. 在文件扩展名前有数字
-    const hasNumberAtFront = fileName.match(/^\d+/);
-    const hasNumberAtBack = fileName.match(/\d+\.[^/.]+$/);
-
-    return hasNumberAtFront || hasNumberAtBack ? true : false;
+    return supportedFormats.test(fileName);
 }
