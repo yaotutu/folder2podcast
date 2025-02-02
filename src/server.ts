@@ -71,42 +71,51 @@ export class PodcastServer {
         console.log('播客列表API: /podcasts\n');
     }
 
+    private async processSources(): Promise<void> {
+        // 清空现有源
+        this.sources.clear();
+        this.aliasMap.clear();
+
+        // 扫描并处理所有播客源
+        const dirs = await this.scanPodcastDirs();
+        for (const dir of dirs) {
+            const source = await processPodcastSource(
+                path.join(this.audioDir, dir)
+            );
+            this.sources.set(dir, source);
+
+            const alias = source.config.alias;
+            if (alias) {
+                if (this.aliasMap.has(alias)) {
+                    throw new Error(`Duplicate alias "${alias}" found. Aliases must be unique.`);
+                }
+                this.aliasMap.set(alias, dir);
+            }
+
+            // 生成并保存feed文件
+            const feed = await generateFeed(source, {
+                baseUrl: this.baseUrl,
+                defaultCover: `${this.baseUrl}${DEFAULT_COVER}`
+            });
+            const feedPath = path.join(this.audioDir, dir, 'feed.xml');
+            await this.saveFeed(feedPath, feed);
+        }
+
+        // 显示更新后的播客列表
+        this.displayPodcastList();
+    }
+
     public async initialize(): Promise<void> {
         try {
             // 注册静态文件服务中间件 - 处理assets文件
             await this.server.register(fastifyStatic, {
-                root: path.join(__dirname, '../src'),  // 确保能访问到src/assets目录
+                root: path.join(__dirname, '../src'),
                 prefix: '/',
                 decorateReply: false
             });
 
-            // 扫描并处理所有播客源
-            const dirs = await this.scanPodcastDirs();
-            for (const dir of dirs) {
-                const source = await processPodcastSource(
-                    path.join(this.audioDir, dir)
-                );
-                this.sources.set(dir, source);
-
-                const alias = source.config.alias;
-                if (alias) {
-                    if (this.aliasMap.has(alias)) {
-                        throw new Error(`Duplicate alias "${alias}" found. Aliases must be unique.`);
-                    }
-                    this.aliasMap.set(alias, dir);
-                }
-
-                // 生成并保存feed文件
-                const feed = await generateFeed(source, {
-                    baseUrl: this.baseUrl,
-                    defaultCover: `${this.baseUrl}${DEFAULT_COVER}`
-                });
-                const feedPath = path.join(this.audioDir, dir, 'feed.xml');
-                await this.saveFeed(feedPath, feed);
-
-                this.server.log.info(`Processed podcast source: ${dir} (alias: ${alias || 'none'})`);
-                this.server.log.info(`Default cover: ${this.baseUrl}${DEFAULT_COVER}`);  // 记录默认封面URL
-            }
+            // 处理所有播客源
+            await this.processSources();
 
             // 设置别名路由处理器 - 必须在静态文件服务之前
             for (const [alias, originalDir] of this.aliasMap.entries()) {
@@ -117,7 +126,7 @@ export class PodcastServer {
                 });
             }
 
-            // 注册静态文件服务中间件 - 处理音频文件（放在别名处理之后）
+            // 注册静态文件服务中间件 - 处理音频文件
             await this.server.register(fastifyStatic, {
                 root: this.audioDir,
                 prefix: '/audio/',
@@ -126,30 +135,25 @@ export class PodcastServer {
 
             // API路由: 获取所有播客列表
             this.server.get('/podcasts', async () => {
-                const podcasts = Array.from(this.sources.values()).map(source => {
-                    return {
-                        title: source.config.title,
-                        description: source.config.description,
-                        dirName: source.dirName,
-                        alias: source.config.alias,
-                        coverUrl: source.coverPath
-                            ? `/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
-                            : DEFAULT_COVER,
-                        feedUrl: {
-                            original: `${this.baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
-                            alias: source.config.alias ? `${this.baseUrl}/audio/${source.config.alias}/feed.xml` : null
-                        },
-                        episodeCount: source.episodes.length,
-                        latestEpisodeDate: source.episodes.length > 0
-                            ? source.episodes[source.episodes.length - 1].pubDate
-                            : null
-                    };
-                });
+                const podcasts = Array.from(this.sources.values()).map(source => ({
+                    title: source.config.title,
+                    description: source.config.description,
+                    dirName: source.dirName,
+                    alias: source.config.alias,
+                    coverUrl: source.coverPath
+                        ? `/audio/${encodeURIComponent(source.dirName)}/cover.jpg`
+                        : DEFAULT_COVER,
+                    feedUrl: {
+                        original: `${this.baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
+                        alias: source.config.alias ? `${this.baseUrl}/audio/${source.config.alias}/feed.xml` : null
+                    },
+                    episodeCount: source.episodes.length,
+                    latestEpisodeDate: source.episodes.length > 0
+                        ? source.episodes[source.episodes.length - 1].pubDate
+                        : null
+                }));
                 return { podcasts };
             });
-
-            // 显示发现的播客列表
-            this.displayPodcastList();
         } catch (error) {
             this.server.log.error('Error processing podcast sources:', error);
             throw error;
@@ -197,5 +201,18 @@ export class PodcastServer {
 
     public async stop(): Promise<void> {
         await this.server.close();
+    }
+
+    public get audioDirectory(): string {
+        return this.audioDir;
+    }
+
+    public async reprocessSources(): Promise<void> {
+        try {
+            await this.processSources();
+        } catch (error) {
+            this.server.log.error('Error reprocessing podcast sources:', error);
+            throw error;
+        }
     }
 }
