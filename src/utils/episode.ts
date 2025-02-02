@@ -38,7 +38,7 @@ export function parseEpisodeTitle(fileName: string): string {
 export function generatePubDate(episodeNumber: number): Date {
     // 根据剧集编号增加天数
     const pubDate = new Date(BASE_DATE);
-    pubDate.setDate(BASE_DATE.getDate() + episodeNumber - 1); // -1是因为第一集应该是基准日期
+    pubDate.setDate(BASE_DATE.getDate() + episodeNumber - 1);
     return pubDate;
 }
 
@@ -60,11 +60,18 @@ export function createEpisode(fileName: string, dirPath: string, titleFormat: 'c
         : fileName.replace(/\.[^/.]+$/, '');
 
     const filePath = path.join(dirPath, fileName);
-    const { pubDate, sortValue } = getFileMetadata(filePath);
+    const { pubDate: metadataPubDate, sortValue } = getFileMetadata(filePath);
+
+    // 两套独立的逻辑：
+    // 1. 有序号的文件：使用序号生成pubDate，保持原有逻辑
+    // 2. 无序号的文件：使用文件元数据的时间和排序值
+    const finalNumber = number !== null ? number : sortValue;
+    const pubDate = number !== null
+        ? generatePubDate(number)  // 有序号文件使用原有逻辑
+        : metadataPubDate;        // 无序号文件使用文件元数据时间
 
     return {
-        // 如果文件名中有数字，使用该数字，否则使用基于文件元数据的排序值
-        number: number !== null ? number : sortValue,
+        number: finalNumber,
         title,
         fileName,
         filePath,
