@@ -8,14 +8,11 @@
     },
     "scripts": {
         "clean": "rimraf dist",
-        "build": "npm run clean && tsc && chmod +x dist/index.js",
+        "build": "npm run clean && tsc",
         "start": "node dist/index.js",
-        "dev": "node --inspect=9229 -r ts-node/register ./src/index.ts",
-        "watch": "tsc -w",
-        "test": "echo \"No tests specified\" && exit 0",
-        "start:dev": "cross-env PORT=3000 AUDIO_DIR=./audio ts-node src/index.ts",
-        "start:prod": "cross-env PORT=3000 AUDIO_DIR=./audio node dist/index.js",
-        "tag": "node scripts/tag-version.js"
+        "dev": "cross-env PORT=3000 AUDIO_DIR=\"$HOME/Desktop/audio_books\" ts-node src/index.ts",
+        "tag": "node scripts/tag-version.js",
+        "docker": "docker run -d --pull always --name folder2podcast -p 3000:3000 -v $HOME/Desktop/audio_books:/podcasts -e PORT=3000 -e BASE_URL=http://192.168.55.136:3000 yaotutu/folder2podcast:main"
     },
     "keywords": [
         "podcast",
