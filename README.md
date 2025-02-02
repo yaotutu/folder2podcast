@@ -583,3 +583,59 @@ docker run -d \
 - [ ] 文件夹发生变更后,自动重新生成feed.xml,无需重启服务
 - [ ] 生成opml文件,用于导入到其他podcast客户端
 
+
+# Changelog
+
+## [v0.1.6] - 2024-03-20
+
+### ✨ 新特性 | New Features
+- 新增 GitHub Actions 工作流，支持新问题、新星标和新分叉的通知 | Added GitHub Actions workflow for notifications of new issues, stars and forks
+- 新增英文版 README 文档，包含预览部分和使用指南 | Added English README with preview section and usage guide
+
+### ⚡️ 性能优化 | Performance Improvements
+- 优化文件命名和剧集解析逻辑 | Enhanced file naming and episode parsing logic
+- 优化剧集时间管理策略 | Refined episode time management strategy
+
+### 📝 文档更新 | Documentation
+- 更新项目名称为 Folder2Podcast RSS 并优化项目描述 | Updated project name to Folder2Podcast RSS and improved project description
+- 增加环境变量配置说明及使用指南 | Added environment variables configuration guide and usage instructions
+
+### 🔧 其他改动 | Other Changes
+- 更新 package.json 脚本以支持开发和 Docker 部署 | Updated package.json scripts for development and Docker deployment
+- 添加 VS Code 启动配置以支持 Node.js 调试 | Added VS Code launch configuration for Node.js debugging
+- 更新开发脚本以启用 ts-node 调试功能 | Updated dev script to enable Node.js debugging with ts-node
+
+## [v0.1.5] - 2024-03-20
+
+### ✨ 新特性 | New Features
+- 新增版本标签管理脚本 | Added tag version management script
+- 添加自动递增版本号功能 | Added automatic version increment feature
+
+### 📝 文档更新 | Documentation
+- 更新文档，添加版本发布流程说明 | Updated documentation with release process instructions
+
+## [v0.1.4] - 2024-03-20
+
+### 🔧 其他改动 | Other Changes
+- 更新标题显示策略，修改默认标题格式为完整模式 | Updated title display strategy, changed default title format to full mode
+
+## [v0.1.3] - 2024-03-20
+
+### ✨ 新特性 | New Features
+- 优化文件扫描逻辑，跳过隐藏文件 | Enhanced file scanning logic to skip hidden files
+
+## [v0.1.2] - 2024-03-20
+
+### ✨ 新特性 | New Features
+- 支持通过环境变量灵活配置服务器地址 | Added flexible server address configuration via BASE_URL environment variable
+
+## [v0.1.1] - 2024-03-20
+
+### 📝 文档更新 | Documentation
+- 添加 BASE_URL 配置说明及注意事项 | Added BASE_URL configuration guide and notes
+- 更新 Docker 镜像名称为 yaotutu/folder2podcast | Updated Docker image name to yaotutu/folder2podcast
+
+## [v0.1.0] - 2024-03-20
+
+### ✨ 新特性 | New Features
+- 项目初始化 | Project initialization
