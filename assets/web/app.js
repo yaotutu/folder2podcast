@@ -1,7 +1,11 @@
 const PODCAST_CLIENTS = {
     'apple': {
         name: 'Apple Podcasts',
-        scheme: (feedUrl) => `podcast://${encodeURIComponent(feedUrl)}`
+        scheme: (feedUrl) => {
+            // 移除 URL 中的 http:// 或 https:// 前缀
+            const cleanUrl = feedUrl.replace(/^https?:\/\//, '');
+            return `podcast://${cleanUrl}`;
+        }
     },
     'overcast': {
         name: 'Overcast',
