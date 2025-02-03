@@ -7,7 +7,7 @@ import { generateFeed } from './utils/feed';
 import { getEnvConfig } from './utils/env';
 
 // 设置默认封面路径为assets中的图片
-const DEFAULT_COVER = '/assets/default-cover.png';  // 改为.png扩展名
+const DEFAULT_COVER = '/assets/default-cover.png';  // 保持不变，因为现在在 src/assets 下
 
 export class PodcastServer {
     private server: FastifyInstance;
@@ -107,9 +107,9 @@ export class PodcastServer {
 
     public async initialize(): Promise<void> {
         try {
-            // 注册静态文件服务中间件 - 处理assets文件
+            // 注册静态文件服务中间件 - 处理 src 目录下的所有静态文件
             await this.server.register(fastifyStatic, {
-                root: path.join(__dirname, '../src'),
+                root: path.join(__dirname),  // src 目录
                 prefix: '/',
                 decorateReply: false
             });
@@ -117,7 +117,7 @@ export class PodcastServer {
             // 处理所有播客源
             await this.processSources();
 
-            // 设置别名路由处理器 - 必须在静态文件服务之前
+            // 设置别名路由处理器
             for (const [alias, originalDir] of this.aliasMap.entries()) {
                 const prefix = `/audio/${alias}/`;
                 this.server.get(`${prefix}*`, async (request, reply) => {
@@ -153,6 +153,11 @@ export class PodcastServer {
                         : null
                 }));
                 return { podcasts };
+            });
+
+            // 添加根路径重定向
+            this.server.get('/', async (request, reply) => {
+                return reply.redirect('/public/index.html');
             });
         } catch (error) {
             this.server.log.error('Error processing podcast sources:', error);

@@ -10,7 +10,7 @@
         "clean": "rimraf dist",
         "build": "npm run clean && tsc",
         "start": "node dist/index.js",
-        "dev": "cross-env PORT=3000 AUDIO_DIR=\"$HOME/Desktop/audio_books\" ts-node src/index.ts",
+        "dev": "cross-env PORT=3000 BASE_URL=http://192.168.55.136:3000 AUDIO_DIR=\"$HOME/Desktop/audio_books\" ts-node src/index.ts",
         "tag": "node scripts/tag-version.js",
         "docker": "docker run -d --pull always --name folder2podcast -p 3000:3000 -v $HOME/Desktop/audio_books:/podcasts -e PORT=3000 -e BASE_URL=http://192.168.55.136:3000 yaotutu/folder2podcast:main",
         "generate-changelog": "ts-node scripts/generate-changelog.ts"

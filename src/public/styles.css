@@ -1,0 +1,188 @@
+:root {
+    --primary-color: #4a90e2;
+    --background-color: #f5f5f5;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --border-radius: 12px;
+    --spacing: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--primary-color);
+}
+
+.podcast-list {
+    display: grid;
+    gap: var(--spacing);
+}
+
+.podcast-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: var(--spacing);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.podcast-header {
+    display: flex;
+    gap: var(--spacing);
+    margin-bottom: var(--spacing);
+}
+
+.podcast-cover {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.podcast-info {
+    flex: 1;
+}
+
+.podcast-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.podcast-description {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.podcast-meta {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.subscribe-section {
+    margin-top: var(--spacing);
+}
+
+.subscribe-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.subscribe-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    font-size: 0.9em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    min-height: 36px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subscribe-button:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.copy-button {
+    background: #666;
+}
+
+.loading {
+    text-align: center;
+    padding: 2em;
+    color: #666;
+}
+
+.feed-url-section {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.feed-url {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #666;
+    background: #f8f8f8;
+    cursor: text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed-url:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+}
+
+.copy-button {
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.copy-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .podcast-header {
+        flex-direction: column;
+    }
+
+    .podcast-cover {
+        width: 100%;
+        height: 200px;
+    }
+
+    .subscribe-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feed-url-section {
+        flex-direction: column;
+    }
+
+    .feed-url {
+        width: 100%;
+    }
+
+    .copy-button {
+        width: 100%;
+    }
+}
