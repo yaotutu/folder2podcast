@@ -2,7 +2,9 @@
 
 # 🎙️ Folder2Podcast RSS
 
-> Instantly convert local audio folders into private podcast RSS feeds
+> Convert local audio folders to private podcast RSS feeds with one command
+
+[中文版](README.md)
 
 ## Background
 
@@ -111,40 +113,10 @@ Important notes:
    - Check if podcast list displays correctly
    - Test audio file access
 
-### NPM Deployment
+## Docker Image Tags
 
-1. **Requirements**
-   - Node.js 14.0 or higher
-   - NPM 6.0 or higher
-   - Prepared audio directory
-
-2. **Installation**
-   ```bash
-   # Clone repository
-   git clone https://github.com/your-repo/folder2podcast.git
-   cd folder2podcast
-
-   # Install dependencies
-   npm install
-
-   # Configure environment variables (optional)
-   export AUDIO_DIR=/path/to/audiobooks
-   export PORT=3000
-   ```
-
-3. **Start Service**
-   ```bash
-   # Development mode
-   npm run start:dev
-
-   # Or start with specific config
-   AUDIO_DIR=/path/to/audiobooks PORT=3000 npm run start:dev
-   ```
-
-4. **Verify Service**
-   - Access dashboard: `http://localhost:3000/podcasts`
-   - Verify audio files are accessible
-   - Test podcast subscription functionality
+- `yaotutu/folder2podcast:main` - Development version, synced with main branch, includes latest features
+- `yaotutu/folder2podcast:latest` - Stable version, tested and released, recommended for production
 
 ## 📱 Client Support and Usage Guide
 
@@ -194,12 +166,12 @@ Almost all podcast clients that support custom RSS feeds work:
 
 The system supports multiple environment variables for customization. Here's the complete list:
 
-| Variable | Description | Default | Example |
-|---------|-------------|---------|---------|
-| `AUDIO_DIR` | Audio files root directory | `./audio` | `/path/to/audiobooks` |
-| `PORT` | Server listening port | `3000` | `8080` |
-| `BASE_URL` | Server base URL for RSS feed links | `http://localhost:PORT` | `http://192.168.55.222:3000` |
-| `TITLE_FORMAT` | Episode title display format | `full` | `clean` or `full` |
+| Variable       | Description                        | Default                 | Example                      |
+| -------------- | ---------------------------------- | ----------------------- | ---------------------------- |
+| `AUDIO_DIR`    | Audio files root directory         | `./audio`               | `/path/to/audiobooks`        |
+| `PORT`         | Server listening port              | `3000`                  | `8080`                       |
+| `BASE_URL`     | Server base URL for RSS feed links | `http://localhost:PORT` | `http://192.168.55.222:3000` |
+| `TITLE_FORMAT` | Episode title display format       | `full`                  | `clean` or `full`            |
 
 Detailed description:
 
