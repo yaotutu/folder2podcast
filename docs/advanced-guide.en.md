@@ -147,7 +147,18 @@ http://[server-address]/audio/[english-alias]/feed.xml
 ### 2. Resource Access
 - Podcast cover: `/audio/podcast-name/cover.jpg`
 - Audio files: `/audio/podcast-name/episode.mp3`
-- Default assets: `/assets/default-cover.png`
+- Default resources: `/image/default-cover.jpg`
+
+### Static Resource Directory Structure
+```
+assets/
+├── web/          # Web interface files
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
+├── image/        # Image resources
+│   └── default-cover.jpg
+```
 
 ## Best Practices
 

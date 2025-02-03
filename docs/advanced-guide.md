@@ -147,7 +147,7 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
 ### 2. 资源访问
 - 播客封面：`/audio/播客名称/cover.jpg`
 - 音频文件：`/audio/播客名称/episode.mp3`
-- 默认资源：`/assets/default-cover.png`
+- 默认资源：`/image/default-cover.jpg`
 
 ## 最佳实践
 
@@ -165,4 +165,46 @@ http://[服务器地址]/audio/[英文别名]/feed.xml
 ### 3. 安全性
 - 使用只读挂载保护音频文件
 - 避免在文件名中使用特殊字符
-- 定期备份配置文件 
+- 定期备份配置文件
+
+## 静态资源路径更新
+
+在最新版本中，我们对静态资源的路径进行了调整，以提高资源管理的灵活性和可维护性。以下是主要的更改：
+
+### 1. 静态资源目录
+
+- 所有静态资源（如 CSS、JavaScript 和图片）现在位于 `assets` 目录下。
+- 访问静态资源的路径已更改为：
+  - CSS 文件: `/web/styles.css`
+  - JavaScript 文件: `/web/app.js`
+  - 封面图片: `/audio/{podcast_dir}/cover.jpg`
+
+### 2. API 路由
+
+- API 路由生成的 URL 现在指向新的静态资源路径。例如，获取播客封面图片的 URL 现在为：
+  ```
+  /audio/{podcast_dir}/cover.jpg
+  ```
+
+### 3. Docker 配置
+
+- Dockerfile 已更新，以确保静态资源和源代码正确复制到容器中。请确保在构建 Docker 镜像时使用最新的 Dockerfile。
+
+### 4. 测试和验证
+
+- 在进行任何部署之前，请确保在本地和 Docker 容器中进行全面的测试，验证所有功能是否正常工作。
+
+## 其他注意事项
+
+- 请确保在使用新的路径时，更新所有相关的代码和配置文件。
+
+### 静态资源目录结构
+```
+assets/
+├── web/          # Web 界面相关文件
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
+├── image/        # 图片资源
+│   └── default-cover.jpg
+``` 

@@ -161,17 +161,16 @@ BASE_URL=http://your-domain.com
 标准的目录结构组织方式：
 
 ```
-audiobooks/
-├── podcast-series-1/
-│   ├── 01-第一章.mp3     # 数字前缀用于排序
-│   ├── 02-第二章.mp3     # 支持多种分隔符
-│   ├── cover.jpg        # 可选：播客封面图片
-│   └── podcast.json     # 可选：配置文件
-│
-└── podcast-series-2/
-    ├── 01.序章.mp3      # 标准命名格式
-    ├── 02.正文.mp3      # 保持命名一致性
-    └── 03.尾声.mp3      # 便于维护管理
+assets/
+├── web/          # Web 界面相关文件
+├── image/        # 图片资源
+audio/            # 播客音频文件
+├── podcast1/
+│   ├── episode1.mp3
+│   └── cover.jpg
+└── podcast2/
+    ├── episode1.mp3
+    └── cover.jpg
 ```
 
 ## ⚙️ 配置说明
