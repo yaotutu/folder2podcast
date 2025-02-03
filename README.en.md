@@ -6,6 +6,30 @@
 
 [中文版](README.md)
 
+## Table of Contents
+- [🎙️ Folder2Podcast RSS](#️-folder2podcast-rss)
+  - [Table of Contents](#table-of-contents)
+  - [Background](#background)
+  - [✨ Features](#-features)
+    - [📱 Web Interface](#-web-interface)
+    - [🎯 Other Features](#-other-features)
+  - [🚀 Quick Start](#-quick-start)
+    - [Docker Deployment (Recommended)](#docker-deployment-recommended)
+  - [Docker Image Tags](#docker-image-tags)
+  - [📦 Directory Structure](#-directory-structure)
+    - [Configuration File Location](#configuration-file-location)
+  - [⚙️ Configuration](#️-configuration)
+    - [Environment Variables](#environment-variables)
+    - [podcast.json Configuration](#podcastjson-configuration)
+  - [🎨 Advanced Features](#-advanced-features)
+  - [📱 Client Support](#-client-support)
+    - [Supported Podcast Clients](#supported-podcast-clients)
+    - [Usage Flow](#usage-flow)
+    - [RSS Best Practices](#rss-best-practices)
+  - [Troubleshooting](#troubleshooting)
+  - [📋 Support \& Feedback](#-support--feedback)
+  - [Changelog](#changelog)
+
 ## Background
 
 Podcast RSS is a powerful audio distribution standard that provides:
@@ -26,14 +50,30 @@ Folder2Podcast RSS lets you easily convert local audio folders into private podc
 
 Just one command to deploy, transforming your local audio into private podcast feeds instantly.
 
-## ✨ Core Features
+## ✨ Features
 
-- 🎯 **Standard RSS Implementation** - Full support for podcast RSS 2.0 spec and iTunes tags
-- 📱 **Perfect Client Compatibility** - Works with all mainstream podcast clients
-- 🔄 **Smart Serialization** - Auto-analyze filenames to build episode order and publish dates
-- 🌐 **Flexible Access** - Support both Chinese paths and English alias dual access
-- 🎨 **Customizable Settings** - Support podcast-level metadata customization (title, author, cover, etc.)
-- 🚀 **Container Deployment** - Provides Docker one-click deployment solution
+### 📱 Web Interface
+The project provides a user-friendly web interface that allows users to:
+- View all available podcast sources
+- Copy subscription URLs with one click
+- One-click subscription support for multiple podcast clients:
+  - Apple Podcasts
+  - Overcast
+  - Pocket Casts
+  - Castro
+  - Moon FM
+  - More clients coming soon...
+
+![Web Interface Preview](docs/images/web-interface.png)
+
+### 🎯 Other Features
+- Smart filename processing
+- Automatic serialization
+- Alias routing
+- Cover image management
+- Multi-device sync
+
+For detailed information, please refer to [Advanced Guide](docs/advanced-guide.en.md).
 
 ## 🚀 Quick Start
 
@@ -118,51 +158,24 @@ Important notes:
 - `yaotutu/folder2podcast:main` - Development version, synced with main branch, includes latest features
 - `yaotutu/folder2podcast:latest` - Stable version, tested and released, recommended for production
 
-## 📱 Client Support and Usage Guide
+## 📦 Directory Structure
 
-### Supported Podcast Clients
+Each podcast folder can contain its own `podcast.json` configuration file to customize that podcast's presentation and behavior. This design allows different settings for each podcast series.
 
-Almost all podcast clients that support custom RSS feeds work:
+### Configuration File Location
+```
+audiobooks/
+├── podcast-series-1/
+│   ├── 01-chapter1.mp3
+│   └── podcast.json    # Independent config for series 1
+└── podcast-series-2/
+    ├── 01.intro.mp3
+    └── podcast.json    # Independent config for series 2
+```
 
-- Apple Podcasts (iOS, Mac)
-- Pocket Casts (All platforms)
-- Overcast (iOS)
-- Castro (iOS)
-- Google Podcasts (Android, Web)
-- AntennaPod (Android)
+## ⚙️ Configuration
 
-### Usage Flow
-
-1. **Get Subscription Link**
-   - Visit `http://your-server:3000/podcasts`
-   - Find the podcast series you want to subscribe to
-   - Copy the corresponding RSS Feed URL
-
-2. **Add to Podcast Client**
-   - Open your preferred podcast client
-   - Find "Add Podcast" or "Add RSS Feed"
-   - Paste your Feed URL
-   - Wait for content to sync
-
-3. **Start Using**
-   - All episodes will automatically sync to the client
-   - Listening progress syncs across devices
-   - Supports background download and offline playback
-   - Can add chapter notes (supported by some clients)
-
-### RSS Best Practices
-
-1. **Content Organization**
-   - Use clear folder structure
-   - Maintain consistent file naming
-   - Add high-quality cover images (recommended 1400x1400px)
-
-2. **Performance Optimization**
-   - Control the number of audio files per folder
-   - Use mp3 format for best compatibility
-   - Configure correct BASE_URL to ensure accessibility
-
-## ⚙️ Environment Variables Configuration
+### Environment Variables
 
 The system supports multiple environment variables for customization. Here's the complete list:
 
@@ -216,35 +229,7 @@ Configuration priority:
 - Environment variables > Default values
 - podcast.json config > Environment variables (for specific podcasts)
 
-## 📱 Preview
-
-### Podcast Client Display
-
-![Podcast Client Preview](docs/images/podcast-client-preview.png)
-
-*Screenshot: Display in Apple Podcasts*
-
-To get similar screenshots:
-1. Subscribe to your podcast using any podcast client (like Apple Podcasts)
-2. Wait for content to sync
-3. Take a screenshot of the podcast details page
-
-## ⚙️ Podcast Configuration File
-
-Each podcast folder can contain its own `podcast.json` configuration file to customize that podcast's presentation and behavior. This design allows different settings for each podcast series.
-
-### Configuration File Location
-```
-audiobooks/
-├── podcast-series-1/
-│   ├── 01-chapter1.mp3
-│   └── podcast.json    # Independent config for series 1
-└── podcast-series-2/
-    ├── 01.intro.mp3
-    └── podcast.json    # Independent config for series 2
-```
-
-### Configuration Parameters
+### podcast.json Configuration
 ```json
 {
   "title": "Podcast Title",         // Title shown in podcast clients
@@ -260,37 +245,85 @@ audiobooks/
 }
 ```
 
-### Important Notes
-- Each podcast can have its own independent configuration
-- Configuration file is optional, defaults used if not configured
-- Folder-level config takes precedence over global environment variables
-- Supports hot reload: changes take effect automatically
+## 🎨 Advanced Features
 
-### Configuration Details
-- **title/description**: Basic podcast display information
-- **alias**: Creates memorable URL path, must be lowercase letters, numbers, and hyphens
-- **language**: RFC 5646 standard language code (e.g., en-us, zh-cn)
-- **category**: Podcast category, affects categorization in clients
-- **explicit**: Content rating flag, indicates presence of sensitive content
-- **titleFormat**: Controls file name display for this podcast, can override global setting
+## 📱 Client Support
 
-## 🌐 URL Access Standard
+### Supported Podcast Clients
 
-The system provides two standard URL access methods:
+Almost all podcast clients that support custom RSS feeds work:
 
-1. Original path access:
-```
-http://[server-address]/audio/[podcast-folder-name]/feed.xml
-```
+- Apple Podcasts (iOS, Mac)
+- Pocket Casts (All platforms)
+- Overcast (iOS)
+- Castro (iOS)
+- Google Podcasts (Android, Web)
+- AntennaPod (Android)
 
-2. Alias path access:
-```
-http://[server-address]/audio/[english-alias]/feed.xml
-```
+### Usage Flow
 
-Access rule explanation:
-- Original path: Uses podcast folder name, supports Chinese encoding
-- Alias path: Uses alias value from podcast.json, English and hyphens only
-- Both paths point to the same resource, providing different access convenience
+1. **Get Subscription Link**
+   - Visit `http://your-server:3000/podcasts`
+   - Find the podcast series you want to subscribe to
+   - Copy the corresponding RSS Feed URL
 
----
+2. **Add to Podcast Client**
+   - Open your preferred podcast client
+   - Find "Add Podcast" or "Add RSS Feed"
+   - Paste your Feed URL
+   - Wait for content to sync
+
+3. **Start Using**
+   - All episodes will automatically sync to the client
+   - Listening progress syncs across devices
+   - Supports background download and offline playback
+   - Can add chapter notes (supported by some clients)
+
+### RSS Best Practices
+
+1. **Content Organization**
+   - Use clear folder structure
+   - Maintain consistent file naming
+   - Add high-quality cover images (recommended 1400x1400px)
+
+2. **Performance Optimization**
+   - Control the number of audio files per folder
+   - Use mp3 format for best compatibility
+   - Configure correct BASE_URL to ensure accessibility
+
+## Troubleshooting
+
+## 📋 Support & Feedback
+
+- Found a bug? [Submit Issue](https://github.com/your-repo/folder2podcast/issues)
+- Have suggestions? [Join Discussion](https://github.com/your-repo/folder2podcast/discussions)
+- Want to contribute? [Submit PR](https://github.com/your-repo/folder2podcast/pulls)
+
+## Changelog
+
+View complete update history in [CHANGELOG.md](CHANGELOG.md)
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/wechat.jpg" width="280" alt="WeChat Group">
+      <br>
+      👆 Scan QR code to join our WeChat group for beta testing!
+    </td>
+    <td align="center">
+      <a href="https://www.producthunt.com/posts/folder2podcast-rss?embed=true">
+        <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=826261&theme=light" 
+          alt="Folder2Podcast RSS - Local folders to RSS podcast feeds" 
+          width="250" height="54">
+      </a>
+      <br>
+      <a href="https://starchart.cc/yaotutu/folder2podcast">
+        <img src="https://starchart.cc/yaotutu/folder2podcast.svg" alt="Stargazers over time" width="500">
+      </a>
+    </td>
+  </tr>
+</table>
+
+</div>

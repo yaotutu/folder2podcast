@@ -69,14 +69,14 @@ Control title display through global environment variables or per-podcast config
 - **explicit**: Indicates presence of sensitive content
 - **titleFormat**: Controls filename display, can override global setting
 
-## Advanced Features
+
 
 ### Episode Time Management
 
 System uses two different time management strategies based on filename format:
 
 1. **Numbered Files**:
-   - Uses base date (2024-12-18) plus episode number to generate publish time
+   - Uses base date plus episode number to generate publish time
    - Lower numbers get earlier publish dates
    - Example: `01-Intro.mp3` publishes before `02-Main.mp3`
 
@@ -165,4 +165,3 @@ http://[server-address]/audio/[english-alias]/feed.xml
 ### 3. Security
 - Use read-only mounts to protect audio files
 - Avoid special characters in filenames
-- Regular configuration backups 

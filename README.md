@@ -23,6 +23,8 @@
     - [环境变量](#环境变量)
     - [podcast.json 配置](#podcastjson-配置)
   - [🎨 高级特性](#-高级特性)
+    - [📱 Web 界面](#-web-界面)
+    - [🎯 其他特性](#-其他特性)
   - [📱 客户端支持](#-客户端支持)
   - [故障排查](#故障排查)
   - [📋 支持与反馈](#-支持与反馈)
@@ -201,6 +203,21 @@ audiobooks/
 
 ## 🎨 高级特性
 
+### 📱 Web 界面
+项目提供了一个友好的 Web 界面，方便用户：
+- 查看所有可用的播客源
+- 一键复制订阅地址
+- 支持多个主流播客客户端的一键订阅
+  - Apple Podcasts
+  - Overcast
+  - Pocket Casts
+  - Castro
+  - Moon FM
+  - 更多客户端持续添加中...
+
+![Web 界面预览](docs/images/web-interface.png)
+
+### 🎯 其他特性
 - 智能文件名处理
 - 自动序列化
 - 别名路由
@@ -235,15 +252,25 @@ audiobooks/
 
 <div align="center">
 
-![微信群](src/assets/wechat.jpg)
-👆 欢迎扫码加好友进群，参与内测！
-
-<a href="https://www.producthunt.com/posts/folder2podcast-rss?embed=true" target="_blank">
-  <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=826261&theme=light" 
-    alt="Folder2Podcast RSS - Local folders to RSS podcast feeds" 
-    style="width: 250px; height: 54px;" width="250" height="54" />
-</a>
-
-[![Stargazers over time](https://starchart.cc/yaotutu/folder2podcast.svg)](https://starchart.cc/yaotutu/folder2podcast)
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/wechat.jpg" width="280" alt="微信群">
+      <br>
+      👆 欢迎扫码加好友进群，参与内测！
+    </td>
+    <td align="center">
+      <a href="https://www.producthunt.com/posts/folder2podcast-rss?embed=true">
+        <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=826261&theme=light" 
+          alt="Folder2Podcast RSS - Local folders to RSS podcast feeds" 
+          width="250" height="54">
+      </a>
+      <br>
+      <a href="https://starchart.cc/yaotutu/folder2podcast">
+        <img src="https://starchart.cc/yaotutu/folder2podcast.svg" alt="Stargazers over time" width="500">
+      </a>
+    </td>
+  </tr>
+</table>
 
 </div>
