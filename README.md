@@ -244,6 +244,6 @@ audiobooks/
     style="width: 250px; height: 54px;" width="250" height="54" />
 </a>
 
-[![Stargazers over time](https://starchart.cc/your-repo/folder2podcast.svg)](https://starchart.cc/your-repo/folder2podcast)
+[![Stargazers over time](https://starchart.cc/yaotutu/folder2podcast.svg)](https://starchart.cc/yaotutu/folder2podcast)
 
 </div>
