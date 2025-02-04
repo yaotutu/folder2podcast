@@ -25,17 +25,22 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/assets ./assets
 
 # 创建音频文件夹
-RUN mkdir -p /podcasts \
-    && chown -R node:node /podcasts \
-    && chmod 755 /podcasts
-
-# 使用非 root 用户运行
-USER node
+RUN mkdir -p /podcasts && chmod 755 /podcasts
 
 # 设置环境变量
 ENV NODE_ENV=production \
     PORT=3000 \
-    AUDIO_DIR=/podcasts
+    AUDIO_DIR=/podcasts \
+    PUID=1000 \
+    PGID=1000
+
+# 创建启动脚本
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'chown -R $PUID:$PGID /app/dist /app/node_modules /app/assets /podcasts' \
+    'exec node dist/index.js' \
+    > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 # 暴露端口
 EXPOSE 3000
@@ -45,4 +50,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/podcasts || exit 1
 
 # 启动命令
-CMD ["node", "dist/index.js"]
+CMD ["/entrypoint.sh"]
