@@ -17,7 +17,9 @@
         "docker:build": "docker build -t folder2podcast:dev .",
         "docker:test": "docker run -d --name folder2podcast-test -p 3000:3000 -v $HOME/Desktop/audio_books:/podcasts folder2podcast:dev",
         "docker:stop": "docker stop folder2podcast-test && docker rm folder2podcast-test",
-        "docker:clean": "npm run docker:stop && docker rmi folder2podcast:dev"
+        "docker:clean": "npm run docker:stop && docker rmi folder2podcast:dev",
+        "docker:mac": "docker run -d --name folder2podcast-mac -p 3000:3000 -v $HOME/Desktop/audio_books:/podcasts -e PUID=$(id -u) -e PGID=$(id -g) -e PORT=3000 -e BASE_URL=http://localhost:3000 folder2podcast:dev",
+        "docker:mac:stop": "docker stop folder2podcast-mac && docker rm folder2podcast-mac"
     },
     "keywords": [
         "podcast",

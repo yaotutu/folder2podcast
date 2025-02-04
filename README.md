@@ -101,6 +101,8 @@ BASE_URL=http://your-domain.com
      -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
      -e BASE_URL=http://your-server-ip:3000 \
+     -e PUID=$(id -u) \
+     -e PGID=$(id -g) \
      yaotutu/folder2podcast
    ```
 
@@ -119,6 +121,8 @@ BASE_URL=http://your-domain.com
          - PORT=3000
          - AUDIO_DIR=/podcasts
          - BASE_URL=http://your-server-ip:3000
+         - PUID=1000  # 替换为您的用户ID
+         - PGID=1000  # 替换为您的用户组ID
        restart: unless-stopped
        healthcheck:
          test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
@@ -127,10 +131,12 @@ BASE_URL=http://your-domain.com
          retries: 3
    ```
 
-   运行：
-   ```bash
-   docker compose up -d
-   ```
+   > **权限说明**：
+   > - 在某些情况下，Docker 容器可能无法正常读写您的音频文件夹
+   > - 这时您需要设置 `PUID` 和 `PGID` 这两个环境变量
+   > - 这两个值应该设置为您的音频文件夹所有者的用户ID和组ID
+   > - 在 Mac/Linux 系统中，只需在终端运行 `id -u` 和 `id -g` 即可获取这两个值
+   > - 设置正确的值后，应用就能正常访问您的音频文件了
 
 3. **验证部署**
    - 访问 `http://localhost:3000/podcasts` 确认服务运行
@@ -183,6 +189,8 @@ audio/            # 播客音频文件
 | `PORT`         | 服务器监听端口     | `3000`                    | `8080`                       |
 | `BASE_URL`     | 服务器基础URL      | `http://localhost:端口号` | `http://192.168.55.222:3000` |
 | `TITLE_FORMAT` | 剧集标题显示格式   | `full`                    | `clean` 或 `full`            |
+| `PUID`         | 音频文件夹所有者ID | `1000`                    | 运行 `id -u` 获取            |
+| `PGID`         | 音频文件夹用户组ID | `1000`                    | 运行 `id -g` 获取            |
 
 ### podcast.json 配置
 

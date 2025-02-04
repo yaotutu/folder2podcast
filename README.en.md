@@ -117,6 +117,8 @@ Important notes:
      -v /path/to/audiobooks:/podcasts \
      -e PORT=3000 \
      -e BASE_URL=http://your-server-ip:3000 \
+     -e PUID=$(id -u) \
+     -e PGID=$(id -g) \
      yaotutu/folder2podcast
    ```
 
@@ -135,6 +137,8 @@ Important notes:
          - PORT=3000
          - AUDIO_DIR=/podcasts
          - BASE_URL=http://your-server-ip:3000
+         - PUID=1000  # Replace with your user ID
+         - PGID=1000  # Replace with your group ID
        restart: unless-stopped
        healthcheck:
          test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
@@ -143,10 +147,12 @@ Important notes:
          retries: 3
    ```
 
-   Run:
-   ```bash
-   docker compose up -d
-   ```
+   > **Permission Note**:
+   > - Sometimes Docker container might have trouble accessing your audio files
+   > - In such cases, you need to set `PUID` and `PGID` environment variables
+   > - These values should match the owner ID of your audio folder
+   > - On Mac/Linux, simply run `id -u` and `id -g` in terminal to get these values
+   > - Once set correctly, the app will be able to access your audio files normally
 
 3. **Verify Deployment**
    - Visit `http://localhost:3000/podcasts` to confirm service is running
@@ -185,6 +191,8 @@ The system supports multiple environment variables for customization. Here's the
 | `PORT`         | Server listening port              | `3000`                  | `8080`                       |
 | `BASE_URL`     | Server base URL for RSS feed links | `http://localhost:PORT` | `http://192.168.55.222:3000` |
 | `TITLE_FORMAT` | Episode title display format       | `full`                  | `clean` or `full`            |
+| `PUID`         | Audio folder owner ID              | `1000`                  | Run `id -u` to get           |
+| `PGID`         | Audio folder group ID              | `1000`                  | Run `id -g` to get           |
 
 Detailed description:
 
