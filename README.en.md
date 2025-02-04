@@ -2,7 +2,7 @@
 
 # 🎙️ Folder2Podcast RSS
 
-> Convert local audio folders to private podcast RSS feeds with one command
+> Convert local audio folders to private podcast RSS feeds with one command - Zero intrusion, No side effects
 
 [中文版](README.md)
 
@@ -69,7 +69,6 @@ The project provides a user-friendly web interface that allows users to:
 ### 🎯 Other Features
 - Smart filename processing
 - Automatic serialization
-- Alias routing
 - Cover image management
 - Multi-device sync
 
@@ -132,7 +131,7 @@ Important notes:
        ports:
          - "3000:3000"
        volumes:
-         - ./audiobooks:/podcasts
+         - ./audiobooks:/podcasts:ro  # Mount in read-only mode
        environment:
          - PORT=3000
          - AUDIO_DIR=/podcasts
@@ -140,11 +139,6 @@ Important notes:
          - PUID=1000  # Replace with your user ID
          - PGID=1000  # Replace with your group ID
        restart: unless-stopped
-       healthcheck:
-         test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/podcasts"]
-         interval: 30s
-         timeout: 10s
-         retries: 3
    ```
 
    > **Permission Note**:
@@ -240,16 +234,15 @@ Configuration priority:
 ### podcast.json Configuration
 ```json
 {
-  "title": "Podcast Title",         // Title shown in podcast clients
-  "description": "Description",     // Podcast description
-  "author": "Author Name",          // Author information
-  "alias": "podcast-name",         // English identifier for URL access (optional)
-  "language": "en-us",             // Language code (RFC 5646)
-  "category": "Technology",        // Podcast category
-  "explicit": false,               // Content rating flag
-  "email": "contact@example.com",  // Contact email (optional)
-  "websiteUrl": "https://example.com", // Related website (optional)
-  "titleFormat": "full"            // Title format: clean or full
+  "title": "Podcast Title",
+  "description": "Podcast Description",
+  "author": "Author Name",
+  "email": "author@example.com",
+  "language": "en-us",
+  "category": "Technology",
+  "explicit": false,
+  "websiteUrl": "https://example.com",
+  "titleFormat": "clean"
 }
 ```
 

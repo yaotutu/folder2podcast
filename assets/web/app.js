@@ -61,6 +61,15 @@ const PODCAST_CLIENTS = {
     // }
 };
 
+// 获取完整的 URL
+function getFullUrl(path) {
+    // 获取当前页面的 origin（包含协议、域名和端口）
+    const origin = window.location.origin;
+    // 确保 path 以 / 开头
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    return `${origin}${normalizedPath}`;
+}
+
 async function loadPodcasts() {
     try {
         const response = await fetch('/podcasts');
@@ -78,37 +87,40 @@ async function loadPodcasts() {
 
 function renderPodcasts(podcasts) {
     const podcastList = document.getElementById('podcast-list');
-    podcastList.innerHTML = podcasts.map(podcast => `
-        <div class="podcast-card">
-            <div class="podcast-header">
-                <img class="podcast-cover" src="${podcast.coverUrl}" alt="${podcast.title} 封面">
-                <div class="podcast-info">
-                    <div class="podcast-title">${podcast.title}</div>
-                    <div class="podcast-description">${podcast.description}</div>
-                    <div class="podcast-meta">
-                        剧集数量: ${podcast.episodeCount}
-                        ${podcast.latestEpisodeDate ? `· 最新更新: ${new Date(podcast.latestEpisodeDate).toLocaleDateString()}` : ''}
+    podcastList.innerHTML = podcasts.map(podcast => {
+        const fullFeedUrl = getFullUrl(podcast.feedUrl);
+        return `
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <img class="podcast-cover" src="${podcast.coverUrl}" alt="${podcast.title} 封面">
+                    <div class="podcast-info">
+                        <div class="podcast-title">${podcast.title}</div>
+                        <div class="podcast-description">${podcast.description}</div>
+                        <div class="podcast-meta">
+                            剧集数量: ${podcast.episodeCount}
+                            ${podcast.latestEpisodeDate ? `· 最新更新: ${new Date(podcast.latestEpisodeDate).toLocaleDateString()}` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="subscribe-section">
+                    <div class="feed-url-section">
+                        <input type="text" 
+                               class="feed-url" 
+                               value="${fullFeedUrl}" 
+                               readonly
+                               onclick="this.select()"
+                        >
+                        <button class="subscribe-button copy-button" onclick="copyFeedUrl(this, '${fullFeedUrl}')">
+                            复制订阅地址
+                        </button>
+                    </div>
+                    <div class="subscribe-buttons">
+                        ${renderSubscribeButtons(fullFeedUrl)}
                     </div>
                 </div>
             </div>
-            <div class="subscribe-section">
-                <div class="feed-url-section">
-                    <input type="text" 
-                           class="feed-url" 
-                           value="${podcast.feedUrl.original}" 
-                           readonly
-                           onclick="this.select()"
-                    >
-                    <button class="subscribe-button copy-button" onclick="copyFeedUrl(this, '${podcast.feedUrl.original}')">
-                        复制订阅地址
-                    </button>
-                </div>
-                <div class="subscribe-buttons">
-                    ${renderSubscribeButtons(podcast.feedUrl.original)}
-                </div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function renderSubscribeButtons(feedUrl) {

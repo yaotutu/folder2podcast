@@ -2,6 +2,7 @@ import { Feed } from 'feed';
 import path from 'path';
 import fs from 'fs-extra';
 import { PodcastSource, ProcessOptions } from '../types';
+import { getEnvConfig } from './env';
 
 async function getFileSize(filePath: string): Promise<number> {
     try {
@@ -11,6 +12,18 @@ async function getFileSize(filePath: string): Promise<number> {
         console.warn(`Failed to get file size for ${filePath}:`, error);
         return 0;
     }
+}
+
+// 获取feed文件的存储路径
+export function getFeedStoragePath(source: PodcastSource): string {
+    const feedStorageDir = path.join(process.cwd(), '.feeds');
+    // 使用文件夹名作为feed文件名，确保唯一性
+    return path.join(feedStorageDir, `${source.dirName}.xml`);
+}
+
+// 获取feed的URL
+function getFeedUrl(baseUrl: string, source: PodcastSource): string {
+    return `${baseUrl}/feeds/${encodeURIComponent(source.dirName)}.xml`;
 }
 
 export async function generateFeed(source: PodcastSource, options: ProcessOptions): Promise<string> {
@@ -36,7 +49,7 @@ export async function generateFeed(source: PodcastSource, options: ProcessOption
         copyright: `All rights reserved ${new Date().getFullYear()}, ${config.author}`,
         updated: updateDate,
         generator: 'Folder2Cast',
-        feed: `${baseUrl}/audio/${encodeURIComponent(source.dirName)}/feed.xml`,
+        feed: getFeedUrl(baseUrl, source),
         author: {
             name: config.author,
             email: config.email,

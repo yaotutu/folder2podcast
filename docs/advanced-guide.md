@@ -7,6 +7,7 @@
 - [部署方式](#部署方式)
 - [API使用说明](#api使用说明)
 - [最佳实践](#最佳实践)
+- [零侵入设计](#零侵入设计)
 
 ## 文件命名规范
 
@@ -48,26 +49,28 @@
 
 ```json
 {
-  "title": "播客标题",            // 在播客客户端中显示的标题
-  "description": "播客描述",      // 播客简介
-  "author": "作者名称",          // 作者信息
-  "alias": "podcast-name",      // URL访问的英文标识符（选填）
-  "language": "zh-cn",          // 语言代码（RFC 5646标准）
-  "category": "科技",           // 播客分类
-  "explicit": false,           // 内容分级标记
-  "email": "contact@example.com", // 联系邮箱（选填）
-  "websiteUrl": "https://example.com", // 相关网站（选填）
-  "titleFormat": "full"        // 标题格式：clean或full
+  "title": "播客标题",
+  "description": "播客描述",
+  "author": "作者名称",
+  "email": "author@example.com",
+  "language": "zh-cn",
+  "category": "Technology",
+  "explicit": false,
+  "websiteUrl": "https://example.com",
+  "titleFormat": "clean"
 }
 ```
 
-### 配置项详解
-- **title/description**：播客的基本展示信息
-- **alias**：用于创建易记的URL访问路径，必须是小写字母、数字和连字符的组合
-- **language**：遵循 RFC 5646 标准的语言代码（如：zh-cn, en-us）
-- **category**：播客分类，影响在客户端中的分类展示
-- **explicit**：内容分级标记，用于提示是否包含敏感内容
-- **titleFormat**：控制该播客的文件名显示方式，可覆盖全局设置
+### 配置项说明
+- **title**：播客的标题
+- **description**：播客的描述
+- **author**：作者名称
+- **email**：联系邮箱
+- **language**：语言代码，遵循 RFC 5646 标准
+- **category**：播客分类
+- **explicit**：是否包含限制级内容
+- **websiteUrl**：相关网站地址
+- **titleFormat**：标题格式化方式，支持 clean（清理后的标题）和 full（完整文件名）
 
 ## 高级特性
 
@@ -207,4 +210,23 @@ assets/
 │   └── app.js
 ├── image/        # 图片资源
 │   └── default-cover.jpg
-``` 
+```
+
+## 零侵入设计
+
+Folder2Podcast RSS 采用了零侵入设计模式，这意味着：
+
+### 数据安全性
+- 🔒 **只读访问** - 应用只需要音频文件夹的读取权限
+- 📁 **原始文件保护** - 不会修改任何原始音频文件或文件夹结构
+- 🔄 **状态隔离** - 所有生成的文件（如 feed.xml）存储在独立的 `.feeds` 目录
+
+### 技术实现
+- 🛡️ **权限隔离** - 使用独立的存储空间管理应用状态
+- 📊 **缓存优化** - feed 文件生成和缓存策略的优化
+- 🔍 **智能监控** - 文件系统变化的高效监测
+
+### 最佳实践
+- 使用只读模式挂载音频文件夹
+- 定期清理 `.feeds` 目录下的缓存文件
+- 监控系统资源使用情况 

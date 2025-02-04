@@ -2,7 +2,7 @@
 
 # 🎙️ Folder2Podcast RSS
 
-> 一键将本地音频文件夹转换为私人播客 RSS 订阅源
+> 一键将本地音频文件夹转换为私人播客 RSS 订阅源，零侵入、无副作用
 
 [English Version](README.en.md)
 
@@ -52,6 +52,7 @@ Folder2Podcast RSS 让您可以轻松地把本地音频文件夹转换为私人�
 
 ## ✨ 核心功能
 
+- 🔒 **零侵入设计** - 以只读方式访问音频文件，不修改原始文件夹结构和内容
 - 🎯 **标准 RSS 实现** - 完整支持播客 RSS 2.0 规范和 iTunes 专有标签
 - 📱 **完美客户端兼容** - 适配所有主流播客客户端
 - 🔄 **智能序列化** - 自动分析文件名构建剧集顺序，生成发布时间
@@ -116,7 +117,7 @@ BASE_URL=http://your-domain.com
        ports:
          - "3000:3000"
        volumes:
-         - ./audiobooks:/podcasts
+         - ./audiobooks:/podcasts:ro  # 以只读模式挂载
        environment:
          - PORT=3000
          - AUDIO_DIR=/podcasts
@@ -199,12 +200,12 @@ audio/            # 播客音频文件
   "title": "播客标题",
   "description": "播客描述",
   "author": "作者名称",
-  "alias": "podcast-name",
+  "email": "author@example.com",
   "language": "zh-cn",
-  "category": "科技",
+  "category": "Technology",
   "explicit": false,
-  "email": "contact@example.com",
-  "websiteUrl": "https://example.com"
+  "websiteUrl": "https://example.com",
+  "titleFormat": "clean"
 }
 ```
 

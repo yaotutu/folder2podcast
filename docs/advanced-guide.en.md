@@ -8,6 +8,25 @@
 - [API Usage](#api-usage)
 - [Best Practices](#best-practices)
 
+## Zero-Intrusion Design
+
+Folder2Podcast RSS implements a zero-intrusion design pattern, which means:
+
+### Data Safety
+- 🔒 **Read-Only Access** - Application only requires read permission for audio folders
+- 📁 **Original File Protection** - Never modifies any original audio files or folder structure
+- 🔄 **State Isolation** - All generated files (e.g., feed.xml) are stored in a separate `.feeds` directory
+
+### Technical Implementation
+- 🛡️ **Permission Isolation** - Uses separate storage space for application state management
+- 📊 **Cache Optimization** - Optimized feed file generation and caching strategy
+- 🔍 **Smart Monitoring** - Efficient detection of filesystem changes
+
+### Best Practices
+- Mount audio folders in read-only mode
+- Regularly clean cache files in the `.feeds` directory
+- Monitor system resource usage
+
 ## File Naming Convention
 
 ### Smart Filename Processing
@@ -48,28 +67,28 @@ Control title display through global environment variables or per-podcast config
 
 ```json
 {
-  "title": "Podcast Title",         // Title shown in podcast clients
-  "description": "Description",     // Podcast description
-  "author": "Author Name",          // Author information
-  "alias": "podcast-name",         // URL identifier (optional)
-  "language": "en-us",             // Language code (RFC 5646)
-  "category": "Technology",        // Podcast category
-  "explicit": false,               // Content rating flag
-  "email": "contact@example.com",  // Contact email (optional)
-  "websiteUrl": "https://example.com", // Related website (optional)
-  "titleFormat": "full"            // Title format: clean or full
+  "title": "Podcast Title",
+  "description": "Podcast Description",
+  "author": "Author Name",
+  "email": "author@example.com",
+  "language": "en-us",
+  "category": "Technology",
+  "explicit": false,
+  "websiteUrl": "https://example.com",
+  "titleFormat": "clean"
 }
 ```
 
 ### Configuration Item Details
-- **title/description**: Basic podcast display information
-- **alias**: Creates URL-friendly path, must use lowercase letters, numbers, and hyphens
-- **language**: RFC 5646 standard language code (e.g., en-us, zh-cn)
-- **category**: Affects categorization in podcast clients
-- **explicit**: Indicates presence of sensitive content
-- **titleFormat**: Controls filename display, can override global setting
-
-
+- **title**: The podcast title
+- **description**: Podcast description
+- **author**: Author name
+- **email**: Contact email
+- **language**: Language code (RFC 5646)
+- **category**: Podcast category
+- **explicit**: Content rating flag
+- **websiteUrl**: Related website
+- **titleFormat**: Title format, supports 'clean' (cleaned title) or 'full' (complete filename)
 
 ### Episode Time Management
 
