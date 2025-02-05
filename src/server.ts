@@ -8,7 +8,7 @@ import { getEnvConfig } from './utils/env';
 import fs from 'fs-extra';
 
 // 设置默认封面路径为assets中的图片
-const DEFAULT_COVER = '/image/default-cover.jpg';
+const DEFAULT_COVER = '/image/default-cover.png';
 
 export class PodcastServer {
     private server: FastifyInstance;
