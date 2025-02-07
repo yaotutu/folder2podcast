@@ -90,6 +90,60 @@ Control title display through global environment variables or per-podcast config
 - **websiteUrl**: Related website
 - **titleFormat**: Title format, supports 'clean' (cleaned title) or 'full' (complete filename)
 
+### Episode Number Extraction Strategy
+
+The system supports multiple strategies for extracting episode numbers from filenames:
+
+#### Default Strategies
+
+1. **Prefix Matching** (Primary)
+   - Finds numbers at the start of filename
+   - Example: `001-TechDaily.mp3` → Number: 1
+   - Example: `123_AI-History.mp3` → Number: 123
+
+2. **Suffix Matching** (Secondary)
+   - Finds numbers before file extension
+   - Example: `TechDaily_001.mp3` → Number: 1
+   - Example: `AI-History-123.mp3` → Number: 123
+
+#### Configurable Strategies
+
+You can configure the following strategies in podcast.json:
+
+1. **First Number**
+   ```json
+   {
+     "episodeNumberStrategy": "first"
+   }
+   ```
+   - Scans left to right, uses the first number found
+   - Example: `ep01TechNews08.mp3` → Number: 1
+
+2. **Last Number**
+   ```json
+   {
+     "episodeNumberStrategy": "last"
+   }
+   ```
+   - Scans right to left, uses the last number found
+   - Example: `ep01TechNews08.mp3` → Number: 8
+
+3. **Custom Regular Expression**
+   ```json
+   {
+     "episodeNumberStrategy": {
+       "pattern": "ep(\\d+)"
+     }
+   }
+   ```
+   - Uses custom regex pattern for precise matching
+   - Example: `ep01TechNews.mp3` → Number: 1
+
+> 📝 Note:
+> - Uses prefix matching by default when not configured
+> - Custom regex must include one capture group ()
+> - Falls back to default strategy if extraction fails
+
 ### Episode Time Management
 
 System uses two different time management strategies based on filename format:

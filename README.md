@@ -205,7 +205,8 @@ audio/            # 播客音频文件
   "category": "Technology",
   "explicit": false,
   "websiteUrl": "https://example.com",
-  "titleFormat": "clean"
+  "titleFormat": "clean",
+  "episodeNumberStrategy": "first"  // 剧集序号提取策略，可选值：prefix（默认）, suffix, first, last, 或 { pattern: "正则表达式" }
 }
 ```
 

@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { PodcastConfig } from '../types';
+import { PodcastConfig, EpisodeNumberStrategy } from '../types';
 
 import { getEnvConfig } from './env';
 
@@ -13,7 +13,8 @@ export const DEFAULT_CONFIG: Required<PodcastConfig> = {
     explicit: false,
     email: '',
     websiteUrl: '',
-    titleFormat: getEnvConfig().TITLE_FORMAT  // 使用全局环境变量中的配置
+    titleFormat: getEnvConfig().TITLE_FORMAT,  // 使用全局环境变量中的配置
+    episodeNumberStrategy: 'prefix'  // 默认使用前缀匹配策略
 };
 
 export async function readConfig(dirPath: string): Promise<PodcastConfig> {
@@ -27,6 +28,31 @@ export async function readConfig(dirPath: string): Promise<PodcastConfig> {
     }
 }
 
+function validateEpisodeNumberStrategy(strategy: EpisodeNumberStrategy): void {
+    if (typeof strategy === 'string') {
+        if (!['prefix', 'suffix', 'first', 'last'].includes(strategy)) {
+            throw new Error(
+                'Invalid episode number strategy. Must be one of: prefix, suffix, first, last'
+            );
+        }
+    } else if (typeof strategy === 'object') {
+        if (!strategy.pattern) {
+            throw new Error('Custom pattern strategy requires a pattern property');
+        }
+
+        try {
+            new RegExp(strategy.pattern);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(`Invalid regex pattern: ${error.message}`);
+            }
+            throw new Error('Invalid regex pattern');
+        }
+    } else {
+        throw new Error('Invalid episode number strategy configuration');
+    }
+}
+
 export function validateConfig(config: PodcastConfig): void {
     // 验证邮箱格式
     if (config.email && !config.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
@@ -36,6 +62,11 @@ export function validateConfig(config: PodcastConfig): void {
     // 验证网址格式
     if (config.websiteUrl && !config.websiteUrl.match(/^https?:\/\/.+/)) {
         throw new Error('Invalid website URL format in podcast.json');
+    }
+
+    // 验证剧集序号提取策略
+    if (config.episodeNumberStrategy) {
+        validateEpisodeNumberStrategy(config.episodeNumberStrategy);
     }
 }
 

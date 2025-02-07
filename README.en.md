@@ -242,7 +242,8 @@ Configuration priority:
   "category": "Technology",
   "explicit": false,
   "websiteUrl": "https://example.com",
-  "titleFormat": "clean"
+  "titleFormat": "clean",
+  "episodeNumberStrategy": "first"  // Episode number extraction strategy: prefix (default), suffix, first, last, or { pattern: "regex" }
 }
 ```
 

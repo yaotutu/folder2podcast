@@ -26,7 +26,8 @@ export async function scanAudioFiles(dirPath: string, config: Required<PodcastCo
         }
 
         try {
-            const episode = createEpisode(file, dirPath, config.titleFormat);
+            // 将配置对象传递给 createEpisode
+            const episode = createEpisode(file, dirPath, config.titleFormat, config);
             episodes.push(episode);
         } catch (error) {
             console.warn(`Skipping invalid file: ${file}`, error);

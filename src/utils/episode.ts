@@ -1,25 +1,78 @@
 import path from 'path';
-import { Episode } from '../types';
+import { Episode, PodcastConfig, EpisodeNumberStrategy } from '../types';
 import crypto from 'crypto';
 import fs from 'fs';
 
 const BASE_DATE = new Date('2024-12-18T00:00:00.000Z');
 
-export function parseEpisodeNumber(fileName: string): number | null {
-    // 首先尝试匹配文件名开头的数字（优先级更高）
-    const frontMatch = fileName.match(/^(\d+)/);
-    if (frontMatch) {
-        return parseInt(frontMatch[1], 10);
-    }
+// 从文件名开头匹配数字（默认策略之一）
+function findPrefixNumber(fileName: string): number | null {
+    const match = fileName.match(/^(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+}
 
-    // 如果文件名开头没有数字，尝试匹配文件扩展名前的数字
-    const backMatch = fileName.match(/(\d+)\.[^/.]+$/);
-    if (backMatch) {
-        return parseInt(backMatch[1], 10);
-    }
+// 从文件扩展名前匹配数字（默认策略之一）
+function findSuffixNumber(fileName: string): number | null {
+    const match = fileName.match(/(\d+)\.[^/.]+$/);
+    return match ? parseInt(match[1], 10) : null;
+}
 
-    // 如果没有找到数字，返回 null
+// 从左到右找第一个数字（配置策略）
+function findFirstNumber(fileName: string): number | null {
+    const match = fileName.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
+}
+
+// 从右到左找最后一个数字（配置策略）
+function findLastNumber(fileName: string): number | null {
+    const matches = fileName.match(/\d+/g);
+    return matches ? parseInt(matches[matches.length - 1], 10) : null;
+}
+
+// 使用自定义正则表达式（配置策略）
+function findNumberByPattern(fileName: string, pattern: string): number | null {
+    try {
+        const match = fileName.match(new RegExp(pattern));
+        if (match && match[1]) {
+            return parseInt(match[1], 10);
+        }
+    } catch (error) {
+        console.warn(`Error using custom pattern: ${error}`);
+    }
     return null;
+}
+
+export function parseEpisodeNumber(fileName: string, config?: PodcastConfig): number | null {
+    const strategy = config?.episodeNumberStrategy || 'prefix';
+
+    // 根据策略选择提取方法
+    if (typeof strategy === 'string') {
+        switch (strategy) {
+            case 'prefix':
+                return findPrefixNumber(fileName);
+            case 'suffix':
+                return findSuffixNumber(fileName);
+            case 'first':
+                return findFirstNumber(fileName);
+            case 'last':
+                return findLastNumber(fileName);
+            default:
+                console.warn(`Unknown strategy: ${strategy}, falling back to prefix`);
+                return findPrefixNumber(fileName);
+        }
+    } else if (strategy.pattern) {
+        // 使用自定义正则表达式
+        const result = findNumberByPattern(fileName, strategy.pattern);
+        if (result !== null) {
+            return result;
+        }
+        // 如果自定义正则表达式失败，回退到默认策略
+        console.warn(`Custom pattern failed for "${fileName}", falling back to prefix strategy`);
+        return findPrefixNumber(fileName);
+    }
+
+    // 如果策略无效，使用默认的前缀策略
+    return findPrefixNumber(fileName);
 }
 
 export function parseEpisodeTitle(fileName: string): string {
@@ -53,8 +106,13 @@ function getFileMetadata(filePath: string) {
     };
 }
 
-export function createEpisode(fileName: string, dirPath: string, titleFormat: 'clean' | 'full' = 'clean'): Episode {
-    const number = parseEpisodeNumber(fileName);
+export function createEpisode(
+    fileName: string,
+    dirPath: string,
+    titleFormat: 'clean' | 'full' = 'clean',
+    config?: PodcastConfig
+): Episode {
+    const number = parseEpisodeNumber(fileName, config);
     const title = titleFormat === 'clean' && number !== null
         ? parseEpisodeTitle(fileName)
         : fileName.replace(/\.[^/.]+$/, '');
