@@ -15,8 +15,8 @@ jobs:
       - name: Send Bark notification for new issue
         if: github.event_name == 'issues'
         run: |
-          TITLE="新Issue提醒"
-          BODY="${{ github.event.issue.title }} by ${{ github.event.issue.user.login }}"
+          TITLE=$(echo -n "新Issue提醒" | jq -sRr @uri)
+          BODY=$(echo -n "${{ github.event.issue.title }} by ${{ github.event.issue.user.login }}" | jq -sRr @uri)
           curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.issue.html_url }}"
 
       # 在GitHub API中，star操作使用'watch'事件名
@@ -25,13 +25,13 @@ jobs:
       - name: Send Bark notification for new star
         if: github.event_name == 'watch'
         run: |
-          TITLE="新Star提醒"
-          BODY="${{ github.repository }}收到来自${{ github.event.sender.login }}的star"
+          TITLE=$(echo -n "新Star提醒" | jq -sRr @uri)
+          BODY=$(echo -n "${{ github.repository }}收到来自${{ github.event.sender.login }}的star" | jq -sRr @uri)
           curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.sender.html_url }}"
 
       - name: Send Bark notification for new fork
         if: github.event_name == 'fork'
         run: |
-          TITLE="新Fork提醒"
-          BODY="${{ github.repository }}被${{ github.event.forkee.owner.login }}fork了"
+          TITLE=$(echo -n "新Fork提醒" | jq -sRr @uri)
+          BODY=$(echo -n "${{ github.repository }}被${{ github.event.forkee.owner.login }}fork了" | jq -sRr @uri)
           curl --location "https://api.day.app/${{ secrets.BARK_KEY }}/${TITLE}/${BODY}?url=${{ github.event.forkee.html_url }}"
