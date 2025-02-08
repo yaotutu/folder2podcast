@@ -2,13 +2,45 @@ import fs from 'fs-extra';
 import path from 'path';
 import { Episode, PodcastSource, PodcastConfig } from '../types';
 import { readConfig, getConfigWithDefaults, validateConfig } from './config';
-import { createEpisode, sortEpisodes, validateFileName } from './episode';
+import { createEpisode, validateFileName, parseEpisodeNumber } from './episode';
 
 export async function validatePodcastDirectory(dirPath: string): Promise<void> {
     // 只检查目录是否存在
     if (!await fs.pathExists(dirPath)) {
         throw new Error(`Directory not found: ${dirPath}`);
     }
+}
+
+export function sortEpisodes(episodes: Episode[], config?: Required<PodcastConfig>): Episode[] {
+    // 创建一个 Map 来缓存文件名的序号解析结果
+    const numberCache = new Map<string, number | null>();
+
+    // 首先解析并缓存所有文件的序号
+    episodes.forEach(episode => {
+        numberCache.set(episode.fileName, parseEpisodeNumber(episode.fileName, config));
+    });
+
+    // 分离有序号和无序号文件
+    const numberedEpisodes = episodes.filter(e => numberCache.get(e.fileName) !== null);
+    const unnumberedEpisodes = episodes.filter(e => numberCache.get(e.fileName) === null);
+
+    // 如果全是无序号文件，直接按时间排序
+    if (numberedEpisodes.length === 0) {
+        return [...episodes].sort((a, b) => a.pubDate.getTime() - b.pubDate.getTime());
+    }
+
+    // 有序号的按序号排序
+    numberedEpisodes.sort((a, b) => {
+        const aNumber = numberCache.get(a.fileName);
+        const bNumber = numberCache.get(b.fileName);
+        return (aNumber || 0) - (bNumber || 0);
+    });
+
+    // 无序号的按时间排序
+    unnumberedEpisodes.sort((a, b) => a.pubDate.getTime() - b.pubDate.getTime());
+
+    // 合并：有序号的在前，无序号的在后
+    return [...numberedEpisodes, ...unnumberedEpisodes];
 }
 
 export async function scanAudioFiles(dirPath: string, config: Required<PodcastConfig>): Promise<Episode[]> {
@@ -34,7 +66,7 @@ export async function scanAudioFiles(dirPath: string, config: Required<PodcastCo
         }
     }
 
-    return sortEpisodes(episodes);
+    return sortEpisodes(episodes, config);
 }
 
 export async function processPodcastSource(dirPath: string): Promise<PodcastSource> {

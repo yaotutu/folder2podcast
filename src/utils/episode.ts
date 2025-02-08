@@ -5,28 +5,47 @@ import fs from 'fs';
 
 const BASE_DATE = new Date('2024-12-18T00:00:00.000Z');
 
-// 从文件名开头匹配数字（默认策略之一）
+// 从文件名开头部分匹配数字
 function findPrefixNumber(fileName: string): number | null {
-    const match = fileName.match(/^(\d+)/);
+    // 匹配前缀部分中的数字（允许前面有字母）
+    const match = fileName.match(/^[^0-9]*?(\d+)(?=[-_.\s])/);
     return match ? parseInt(match[1], 10) : null;
 }
 
-// 从文件扩展名前匹配数字（默认策略之一）
+// 从文件名结尾部分匹配数字（在扩展名之前）
 function findSuffixNumber(fileName: string): number | null {
-    const match = fileName.match(/(\d+)\.[^/.]+$/);
+    // 把文件名按 . 分割，只取最后一个点之前的部分
+    const parts = fileName.split('.');
+    if (parts.length < 2) return null;
+
+    const nameWithoutExt = parts.slice(0, -1).join('.');
+    // 匹配结尾处的数字（可以被其他非数字字符包围）
+    const match = nameWithoutExt.match(/[^0-9](\d+)$/);
     return match ? parseInt(match[1], 10) : null;
 }
 
 // 从左到右找第一个数字（配置策略）
 function findFirstNumber(fileName: string): number | null {
-    const match = fileName.match(/\d+/);
-    return match ? parseInt(match[0], 10) : null;
+    // 检查文件名前30个字符
+    const prefix = fileName.substring(0, 30);
+    const match = prefix.match(/^[^0-9]*?(\d+)(?=[-_.\s])/);
+    if (match) {
+        return parseInt(match[1], 10);
+    }
+    return null;
 }
 
 // 从右到左找最后一个数字（配置策略）
 function findLastNumber(fileName: string): number | null {
-    const matches = fileName.match(/\d+/g);
-    return matches ? parseInt(matches[matches.length - 1], 10) : null;
+    // 去掉扩展名
+    const nameWithoutExt = fileName.replace(/\.[^/.]+$/, '');
+    // 匹配所有数字组
+    const matches = nameWithoutExt.match(/(\d+)/g);
+    if (!matches) return null;
+
+    // 找到最后一个数字
+    const lastNumber = matches[matches.length - 1];
+    return parseInt(lastNumber, 10);
 }
 
 // 使用自定义正则表达式（配置策略）
@@ -98,9 +117,7 @@ export function generatePubDate(episodeNumber: number): Date {
 function getFileMetadata(filePath: string) {
     const stats = fs.statSync(filePath);
     return {
-        // 使用文件的创建时间作为发布日期
         pubDate: new Date(stats.ctimeMs),
-        // 使用创建时间的时间戳和文件大小生成一个稳定的排序值
         sortValue: Math.floor(stats.ctimeMs / 1000) * 10000 +
             parseInt(String(stats.size).slice(0, 4))
     };
@@ -137,12 +154,42 @@ export function createEpisode(
     };
 }
 
-export function sortEpisodes(episodes: Episode[]): Episode[] {
-    return [...episodes].sort((a, b) => a.number - b.number);
-}
-
 export function validateFileName(fileName: string): boolean {
     // 检查是否是支持的音频格式
     const supportedFormats = /\.(mp3|m4a|wav)$/i;
     return supportedFormats.test(fileName);
+}
+
+// 直接运行测试
+if (require.main === module) {
+    // 测试用例
+    const files = [
+        'zk001 第一期.mp3',
+        'zk发刊词 来，每天跟上全球科技新变化.mp3',
+        'zk003 英伟达收购ARM：为什么引起芯片行业震动？.mp3',
+        'zk004 可能&性&空间：为什么不幸的家庭各有各的不幸.mp3'
+    ];
+
+    // 添加后缀测试用例
+    const moreFiles = [
+        ...files,
+        '第一期_001.mp3',
+        '科技早知道ep003.mp3',
+        '人工智能_005.wav'
+    ];
+
+    // 测试不同的策略
+    const strategies = ['prefix', 'first', 'last', 'suffix'] as const;
+
+    strategies.forEach(strategy => {
+        console.log(`\n测试 ${strategy} 策略：`);
+        console.log('-'.repeat(50));
+
+        moreFiles.forEach(file => {
+            const number = parseEpisodeNumber(file, { episodeNumberStrategy: strategy });
+            console.log(`文件: ${file}`);
+            console.log(`提取的序号: ${number === null ? '无序号' : number}`);
+            console.log('-'.repeat(20));
+        });
+    });
 }
