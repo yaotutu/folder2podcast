@@ -259,6 +259,13 @@ audio/            # 播客音频文件
 
 查看完整的更新历史请访问 [CHANGELOG.md](CHANGELOG.md)
 
+## 代托管与技术支持
+
+- **播客托管服务**：您可以将音频文件交给我们，我们提供专业的托管和订阅服务
+- **付费技术支持**：提供私有部署、环境配置等技术支持服务
+
+如需以上服务，请通过微信联系
+
 <div align="center">
 
 <table>
@@ -269,17 +276,26 @@ audio/            # 播客音频文件
       👆 欢迎扫码加好友进群，参与内测！
     </td>
     <td align="center">
-      <a href="https://www.producthunt.com/posts/folder2podcast-rss?embed=true">
-        <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=826261&theme=light" 
-          alt="Folder2Podcast RSS - Local folders to RSS podcast feeds" 
-          width="250" height="54">
-      </a>
+      <img src="docs/images/sponsor.jpg" width="280" alt="赞赏码">
       <br>
-      <a href="https://starchart.cc/yaotutu/folder2podcast">
-        <img src="https://starchart.cc/yaotutu/folder2podcast.svg" alt="Stargazers over time" width="500">
-      </a>
+      👆 如果觉得项目对你有帮助，欢迎赞赏支持！
     </td>
   </tr>
 </table>
+
+<br>
+
+<a href="https://www.producthunt.com/posts/folder2podcast-rss?embed=true">
+  <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=826261&theme=light" 
+    alt="Folder2Podcast RSS - Local folders to RSS podcast feeds" 
+    width="250" height="54">
+</a>
+
+<br>
+<br>
+
+<a href="https://starchart.cc/yaotutu/folder2podcast">
+  <img src="https://starchart.cc/yaotutu/folder2podcast.svg" alt="Stargazers over time" width="800">
+</a>
 
 </div>
