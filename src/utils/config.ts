@@ -14,7 +14,8 @@ export const DEFAULT_CONFIG: Required<PodcastConfig> = {
     email: '',
     websiteUrl: '',
     titleFormat: getEnvConfig().TITLE_FORMAT,  // 使用全局环境变量中的配置
-    episodeNumberStrategy: 'prefix'  // 默认使用前缀匹配策略
+    episodeNumberStrategy: 'prefix',  // 默认使用前缀匹配策略
+    useMTime: false     // 默认不使用文件创建时间
 };
 
 export async function readConfig(dirPath: string): Promise<PodcastConfig> {

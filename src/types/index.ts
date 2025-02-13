@@ -24,6 +24,7 @@ export interface PodcastConfig {
     websiteUrl?: string;
     titleFormat?: 'clean' | 'full';  // 标题显示策略：clean=清理后的标题，full=完整文件名
     episodeNumberStrategy?: EpisodeNumberStrategy;  // 可选：序号提取策略
+    useMTime?: boolean;  // 是否使用文件的创建时间作为发布时间
 }
 
 export interface PodcastSource {

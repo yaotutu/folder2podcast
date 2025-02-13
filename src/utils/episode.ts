@@ -123,6 +123,28 @@ function getFileMetadata(filePath: string) {
     };
 }
 
+// 根据配置和文件信息生成发布日期
+function generateEpisodePubDate(params: {
+    number: number | null;
+    metadataPubDate: Date;
+    useMTime?: boolean;
+}): Date {
+    const { number, metadataPubDate, useMTime } = params;
+
+    // 如果配置为使用文件修改时间，直接返回
+    if (useMTime) {
+        return metadataPubDate;
+    }
+
+    // 如果有序号，使用序号生成日期
+    if (number !== null) {
+        return generatePubDate(number);
+    }
+
+    // 默认使用文件修改时间
+    return metadataPubDate;
+}
+
 export function createEpisode(
     fileName: string,
     dirPath: string,
@@ -137,13 +159,15 @@ export function createEpisode(
     const filePath = path.join(dirPath, fileName);
     const { pubDate: metadataPubDate, sortValue } = getFileMetadata(filePath);
 
-    // 两套独立的逻辑：
-    // 1. 有序号的文件：使用序号生成pubDate，保持原有逻辑
-    // 2. 无序号的文件：使用文件元数据的时间和排序值
+    // 生成最终的发布日期
+    const pubDate = generateEpisodePubDate({
+        number,
+        metadataPubDate,
+        useMTime: config?.useMTime
+    });
+
+    // 生成最终的序号（用于排序）
     const finalNumber = number !== null ? number : sortValue;
-    const pubDate = number !== null
-        ? generatePubDate(number)  // 有序号文件使用原有逻辑
-        : metadataPubDate;        // 无序号文件使用文件元数据时间
 
     return {
         number: finalNumber,
