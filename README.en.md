@@ -243,9 +243,19 @@ Configuration priority:
   "explicit": false,
   "websiteUrl": "https://example.com",
   "titleFormat": "clean",
-  "episodeNumberStrategy": "first"  // Episode number extraction strategy: prefix (default), suffix, first, last, or { pattern: "regex" }
+  "episodeNumberStrategy": "first",  // Episode number extraction strategy: prefix (default), suffix, first, last, or { pattern: "regex" }
+  "useMTime": false  // Whether to use file creation time as publish date, defaults to false
 }
 ```
+
+> 📝 **Time Management Note**:
+> - When `useMTime` is `false` (default):
+>   - Files with numbers use number-based publish dates
+>   - Files without numbers use file creation time
+> - When `useMTime` is `true`:
+>   - All files use file creation time as publish date
+>   - Ignores number information in filenames
+> - For detailed information, refer to [Advanced Guide](docs/advanced-guide.en.md)
 
 ## 🎨 Advanced Features
 
@@ -329,3 +339,13 @@ View complete update history in [CHANGELOG.md](CHANGELOG.md)
 </table>
 
 </div>
+
+### 1. Podcast List API
+- Access `/podcasts` to get all available podcasts
+- Returns detailed information including title, description, subscription URLs
+- Feed URLs include complete access addresses ready for subscription
+
+### 2. Resource Access
+- Podcast cover: `/audio/podcast-name/cover.jpg`
+- Audio files: `/audio/podcast-name/episode.mp3`
+- Default resources: `/image/default-cover.jpg`

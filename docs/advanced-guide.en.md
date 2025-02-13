@@ -146,31 +146,54 @@ You can configure the following strategies in podcast.json:
 
 ### Episode Time Management
 
-System uses two different time management strategies based on filename format:
+The system provides two time management strategies, controlled by the `useMTime` configuration in `podcast.json`:
 
-1. **Numbered Files**:
-   - Uses base date plus episode number to generate publish time
-   - Lower numbers get earlier publish dates
-   - Example: `01-Intro.mp3` publishes before `02-Main.mp3`
+1. **Default Strategy** (`useMTime: false`):
+   - **For Numbered Files**:
+     - Uses base date (2024-12-18) plus episode number to generate publish time
+     - Lower numbers get earlier publish dates
+     - Example: `01-Intro.mp3` publishes before `02-Main.mp3`
+   - **For Non-numbered Files**:
+     - Uses actual file creation time as publish date
+     - Generates unique sorting value from creation time and file size
+     - Maintains natural time order
 
-2. **Non-numbered Files**:
-   - Uses actual file creation time as publish date
-   - Generates unique sorting value from creation time and file size
-   - Maintains natural time order
+2. **File Time Strategy** (`useMTime: true`):
+   - Always uses file creation time as publish date
+   - Applies to all files (regardless of numbering)
+   - Completely based on filesystem timestamps
+   - Configuration example:
+     ```json
+     {
+       "title": "My Podcast",
+       "description": "Podcast Description",
+       "useMTime": true
+     }
+     ```
+
+> 📝 Tips:
+> - Use `useMTime: true` if you want to rely entirely on file creation times for publish order
+> - Use default setting or `useMTime: false` if you want to control publish order through filename numbers
+> - This configuration can be set individually for each podcast, allowing different strategies for different podcasts
 
 ### URL Access Standards
 
-System provides two standard URL access methods:
+The system provides standard URL access methods:
 
-1. Original Path Access:
+Audio file access:
 ```
-http://[server-address]/audio/[podcast-folder-name]/feed.xml
+http://[server-address]/audio/[podcast-folder-name]/[audio-filename]
 ```
 
-2. Alias Path Access:
+RSS Feed access:
 ```
-http://[server-address]/audio/[english-alias]/feed.xml
+http://[server-address]/feeds/[podcast-folder-name].xml
 ```
+
+> 📝 Note:
+> - Podcast folder name is your audio directory name
+> - Ensure folder names don't contain special characters
+> - All non-ASCII characters in URLs will be automatically encoded
 
 ## Deployment Methods
 
@@ -214,7 +237,6 @@ http://[server-address]/audio/[english-alias]/feed.xml
 ### 1. Podcast List API
 - Access `/podcasts` to get all available podcasts
 - Returns detailed information including title, description, subscription URLs
-- Supports both Chinese path and English alias access
 - Feed URLs include complete access addresses ready for subscription
 
 ### 2. Resource Access
@@ -243,8 +265,8 @@ assets/
 
 ### 2. Performance Optimization
 - Control number of files per folder
-- Use English aliases for better compatibility
 - Add appropriately sized cover images (square recommended)
+- Optimize audio file formats for streaming
 
 ### 3. Security
 - Use read-only mounts to protect audio files
