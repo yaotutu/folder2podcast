@@ -283,7 +283,7 @@ audio/            # 播客音频文件
     <td align="center">
       <img src="docs/images/wechat.jpg" width="280" alt="微信群">
       <br>
-      👆 欢迎扫码加好友进群，参与内测！
+      👆 欢迎扫码加好友提供技术支持！
     </td>
     <td align="center">
       <img src="docs/images/sponsor.jpg" width="280" alt="赞赏码">
