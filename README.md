@@ -2,7 +2,7 @@
 
 # 🎙️ Folder2Podcast RSS
 
-> 一键将本地音频文件夹转换为私人播客 RSS 订阅源，零侵入、无副作用
+> 一键将本地音频文件夹转换为私人播客 RSS 订阅源，零侵入、 无副作用
 
 [English Version](README.en.md)
 
